@@ -1,4 +1,4 @@
-# M# MERN Chat Application
+# MERN Chat Application
 
 A full-stack **real-time chat application** built using the **MERN Stack** (MongoDB, Express.js, React, and Node.js).
 
