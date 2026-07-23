@@ -14,11 +14,32 @@ router.get("/get-logged-user" , authMiddleware , async (req,res) => {
         });
 
     }catch(error){
-        res.send({
+        res.status(400).send({
             message: error.message,
             success: false
         });
     }
 })
+
+router.get("/get-all-users", authMiddleware, async (req,res) => {
+    try{
+        const userid = req.userId
+        const allUsers = await User.find({_id: {$ne: userid}});
+
+        res.send({
+            message: "All users data fetched successfully.",
+            success: true,
+            data: allUsers
+        });
+
+    }catch(error){
+        res.status(400).send({
+            message: error.message,
+            success: false
+        });
+    }
+})
+
+
 
 module.exports = router;
