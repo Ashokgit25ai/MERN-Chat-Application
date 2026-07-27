@@ -43,7 +43,7 @@ router.post("/login", async (req,res) => {
     try{
 
         //check if user is exists
-        const user = await User.findOne({email: req.body.email});
+        const user = await User.findOne({email: req.body.email}).select("+password");
         if(!user){
             return res.status(400).send({
                 message:"User doesn't exist.",
@@ -60,7 +60,7 @@ router.post("/login", async (req,res) => {
         }
         //check the password is match, if match create jwt token 
         const token = await jwt.sign({userId: user._id},process.env.SECRET_KEY,{expiresIn: "1d"});
-
+        
         res.send({
             message: "Login successfull",
             success: true,
