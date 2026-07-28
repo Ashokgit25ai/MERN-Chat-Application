@@ -2,174 +2,296 @@
 
 A full-stack **real-time chat application** built using the **MERN Stack** (MongoDB, Express.js, React, and Node.js).
 
-This application is designed to provide secure, real-time communication between users while demonstrating modern full-stack web development practices. It includes user authentication, RESTful APIs, MongoDB integration, and real-time messaging using Socket.IO. The project is being developed with a scalable and modular architecture to support future enhancements such as group chats, media sharing, notifications, and user presence.
+This application is designed to provide secure, real-time communication between users while demonstrating modern full-stack web development practices. It includes JWT-based authentication, RESTful APIs, MongoDB integration, and is being developed to support real-time messaging using Socket.IO. The project follows a scalable and modular architecture to support future enhancements such as group chats, media sharing, notifications, and user presence.
 
-> **Current Status:** 🚧 Backend Development in Progress
-
----
-
-## Overview
-
-This project demonstrates how to build a modern real-time chat application from scratch using the MERN stack. The goal is to gain practical experience in full-stack development, REST APIs, authentication, database management, and real-time communication.
+> **Current Status:** 🚧 Backend APIs Completed | Frontend & Real-Time Features In Progress
 
 ---
 
-## Tech Stack
+# Overview
 
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* dotenv
-* Morgan
-
-### Frontend *(Coming Soon)*
-
-* React.js
-* React Router
-* Axios
-
-### Real-Time Communication *(Planned)*
-
-* Socket.IO
+This project demonstrates how to build a modern chat application from scratch using the MERN stack. The goal is to gain practical experience in backend development, REST APIs, authentication, database management, and eventually real-time communication.
 
 ---
 
-## Features
+# Tech Stack
 
-### Completed
+## Backend
 
-* Project setup
-* Express server configuration
-* MongoDB database connection
-* Environment variable configuration
-* Mongoose integration
-* Modular project structure
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JSON Web Token (JWT)
+- bcrypt
+- dotenv
+- Morgan
 
-### In Progress
+## Frontend *(Coming Soon)*
 
-* User authentication
-* User model creation
-* REST API development
+- React.js
+- React Router
+- Axios
 
-### Planned
+## Real-Time Communication *(Planned)*
 
-* User registration & login
-* JWT Authentication
-* Password hashing with bcrypt
-* Real-time messaging with Socket.IO
-* One-to-one chat
-* Group chat
-* Online/Offline user status
-* Image and file sharing
-* Responsive React frontend
-* Dark/Light mode
-* Notifications
-* Message read receipts
+- Socket.IO
 
 ---
 
-## Learning Objectives
+# Features
+
+## Completed
+
+- Express server setup
+- MongoDB database connection
+- Environment variable configuration
+- Modular project structure
+- User Registration API
+- User Login API
+- JWT Authentication
+- Password hashing using bcrypt
+- Authentication middleware
+- Get Logged-in User API
+- Get All Users API
+- Create New Chat API
+- Get All Chats API
+- Send Message API
+- Update Last Message Automatically
+- Unread Message Counter
+
+## In Progress
+
+- React Frontend
+- Socket.IO Integration
+
+## Planned
+
+- Real-time messaging
+- Online/Offline user status
+- Typing indicator
+- Read receipts
+- Group chats
+- Image and file sharing
+- Chat search
+- Message deletion
+- User profile management
+- Notifications
+- Responsive UI
+- Dark/Light Mode
+
+---
+
+# API Endpoints
+
+## Authentication
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/auth/signup` |
+| POST | `/api/auth/login` |
+
+---
+
+## Users
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/user/get-logged-user` |
+| GET | `/api/user/get-all-users` |
+
+---
+
+## Chats
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/chat/create-new-chat` |
+| GET | `/api/chat/get-all-chats` |
+
+---
+
+## Messages
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/message/new-message` |
+
+---
+
+# Learning Objectives
 
 This project is helping me strengthen my understanding of:
 
-* MERN Stack fundamentals
-* Backend development with Node.js and Express.js
-* MongoDB database management using Mongoose
-* RESTful API development
-* User authentication and authorization
-* Real-time communication using Socket.IO
-* Full-stack application architecture
-* Deployment of MERN applications
+- MERN Stack fundamentals
+- Backend development with Node.js and Express.js
+- MongoDB database management using Mongoose
+- RESTful API development
+- JWT Authentication
+- Password Encryption
+- Middleware
+- Authentication & Authorization
+- MongoDB Relationships
+- Full-stack application architecture
+- Real-time communication using Socket.IO
 
 ---
 
-## Project Structure
+# Project Structure
 
+```
 MERN-Chat-Application/
 │
-├── client/                  # React Frontend (Coming Soon)
+├── client/                        # React Frontend (Coming Soon)
 │
 └── server/
+    │
     ├── config/
     ├── controllers/
-    ├── middleware/
+    │   ├── authController.js
+    │   ├── chatController.js
+    │   ├── messageController.js
+    │   └── userController.js
+    │
+    ├── middlewares/
+    │   └── authMiddleware.js
+    │
     ├── models/
-    ├── routes/
+    │   ├── user.js
+    │   ├── chat.js
+    │   └── message.js
+    │
     ├── app.js
     ├── server.js
     ├── package.json
-    └── config.env
-
+    └── .env
+```
 
 ---
 
-## Getting Started
+# Getting Started
 
-### Clone the Repository
+## Clone the Repository
 
-
+```bash
 git clone https://github.com/Ashokgit25ai/MERN-Chat-Application.git
+```
 
+## Navigate to Backend
 
-### Navigate to the Backend
-
+```bash
 cd MERN-Chat-Application/server
+```
 
+## Install Dependencies
 
-### Install Dependencies
-
-
+```bash
 npm install
+```
 
+## Configure Environment Variables
 
-### Run the Development Server
+Create a `.env` file inside the `server` folder.
 
+```env
+PORT=5000
+MONGO_URL=your_mongodb_connection_string
+SECRET_KEY=your_secret_key
+```
 
+## Run Development Server
+
+```bash
 npm run dev
-
+```
 
 ---
 
-## Prerequisites
+# Authentication Flow
+
+```
+User Login
+     │
+     ▼
+JWT Token Generated
+     │
+     ▼
+Client Stores Token
+     │
+     ▼
+Protected API Request
+     │
+Authorization: Bearer <token>
+     │
+     ▼
+authMiddleware
+     │
+     ▼
+Token Verification
+     │
+     ▼
+req.userId Available in Controllers
+```
+
+---
+
+# Prerequisites
 
 Before working with this project, you should have:
 
-* Basic knowledge of HTML, CSS, and JavaScript
-* Familiarity with Node.js and npm
-* Basic understanding of React
-* MongoDB installed locally or a MongoDB Atlas account
+- Basic knowledge of HTML, CSS, and JavaScript
+- Familiarity with Node.js and npm
+- Basic understanding of React
+- Basic understanding of MongoDB
+- MongoDB Atlas account or Local MongoDB
 
 ---
 
-## Roadmap
+# Roadmap
 
-* [x] Project setup
-* [x] Express server
-* [x] MongoDB connection
-* [x] Mongoose configuration
-* [x] User Authentication
-* [x] JWT Authorization
-* [x] Chat APIs
-* [ ] Socket.IO integration
-* [ ] React Frontend
-* [ ] Private messaging
-* [ ] Group chat
-* [ ] Image sharing
-* [ ] Deployment
+- [x] Project setup
+- [x] Express server
+- [x] MongoDB connection
+- [x] Mongoose configuration
+- [x] User Authentication
+- [x] JWT Authorization
+- [x] Password Encryption
+- [x] User APIs
+- [x] Chat APIs
+- [x] Message APIs
+- [ ] Socket.IO Integration
+- [ ] React Frontend
+- [ ] Private Messaging
+- [ ] Group Chats
+- [ ] Image Sharing
+- [ ] Read Receipts
+- [ ] Notifications
+- [ ] Deployment
 
 ---
 
-## Author
+# Future Improvements
+
+- Real-time messaging using Socket.IO
+- Typing indicator
+- Online user tracking
+- Push notifications
+- File uploads
+- Voice messages
+- Video calling
+- Chat search
+- Admin dashboard
+
+---
+
+# Author
 
 **Ganesh Venkata Ashok**
 
-* GitHub: https://github.com/Ashokgit25ai
+- GitHub: https://github.com/Ashokgit25ai
 
 ---
 
-## License
+# License
 
 This project is developed for learning, practice, and portfolio purposes.
