@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Chat = require("../models/chat");
 const authMiddleware = require("../middlewares/authMiddleware");
 const Message = require("../models/message");
+const { trusted } = require("mongoose");
 
 
 router.post("/new-message", authMiddleware, async (req , res) => {
@@ -27,6 +28,25 @@ router.post("/new-message", authMiddleware, async (req , res) => {
             success: true,
             message: "Message sent successfully",
             data: savedMessage
+        });
+
+    }catch(error){
+        res.status(400).send({
+            message: error.message,
+            success: false
+        });
+    }
+});
+
+router.get("/get-all-messages/:chatId", authMiddleware, async (req , res) => {
+    try{
+        const chatId = req.params.chatId
+        const allMessages = await Message.find({chatId:chatId})
+                                      .sort({createdAt: 1});
+        res.status(201).send({
+            message: "Messages fetches succesfully!",
+            success: true,
+            data: allMessages
         });
 
     }catch(error){
