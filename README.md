@@ -150,9 +150,9 @@ Before working with this project, you should have:
 * [x] Express server
 * [x] MongoDB connection
 * [x] Mongoose configuration
-* [ ] User Authentication
-* [ ] JWT Authorization
-* [ ] Chat APIs
+* [x] User Authentication
+* [x] JWT Authorization
+* [x] Chat APIs
 * [ ] Socket.IO integration
 * [ ] React Frontend
 * [ ] Private messaging
