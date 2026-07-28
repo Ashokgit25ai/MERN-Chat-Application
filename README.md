@@ -187,19 +187,9 @@ cd MERN-Chat-Application/server
 
 ```bash
 npm install
-```
 
-## Configure Environment Variables
 
-Create a `.env` file inside the `server` folder.
-
-```env
-PORT=5000
-MONGO_URL=your_mongodb_connection_string
-SECRET_KEY=your_secret_key
-```
-
-## Run Development Server
+### Run the Development Server
 
 ```bash
 npm run dev
