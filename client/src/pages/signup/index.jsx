@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { signupUser } from '../apiCalls/auth';
+import { toast } from 'react-hot-toast';
 
 const index = () => {
   const [user, setUser] = useState({
@@ -19,12 +20,12 @@ const index = () => {
     try{
       response = await signupUser(user);
       if (response.success){
-        return alert(response.message);
+        return toast.success(response.message);
       }else{
-        return alert(response.message);
+        return toast.error(response.message);
       }
     }catch(error){
-      return alert(response.message);
+      return toast.error(response.message);
 
     }
   };

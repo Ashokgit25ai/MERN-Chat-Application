@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { loginUser } from '../apiCalls/auth';
+import { toast } from 'react-hot-toast';
 
 const index = () => {
   const [user, setUser] = useState({
@@ -14,14 +15,14 @@ const index = () => {
     try{
       response = await loginUser(user);
       if (response.success){
-        alert(response.message);
+        toast.success(response.message);
         localStorage.setItem('token', response.token);
         window.location.href = '/';
       }else{
-        return alert(response.message);
+        return toast.error(response.message);
       }
     }catch(error){
-      return alert(response.message);
+      return toast.error(response.message);
     }
   };
 
@@ -52,4 +53,4 @@ const index = () => {
   )
 }
 
-export default index
+export default index;
