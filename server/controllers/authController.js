@@ -13,7 +13,7 @@ router.post("/signup", async (req,res) => {
 
         //if user does not exists, send error message
         if(user){
-            return res.status(400).send({
+            return res.send({
                 message: 'User already exist.',
                 success: false
             });
@@ -32,7 +32,7 @@ router.post("/signup", async (req,res) => {
         });
 
     }catch(error){
-        res.status(400).send({
+        res.send({
             message: error.message,
             success: false
         });
@@ -45,7 +45,7 @@ router.post("/login", async (req,res) => {
         //check if user is exists
         const user = await User.findOne({email: req.body.email}).select("+password");
         if(!user){
-            return res.status(400).send({
+            return res.send({
                 message:"User doesn't exist.",
                 success: false
             });
@@ -53,7 +53,7 @@ router.post("/login", async (req,res) => {
         //check if the password is correct or not
         const isValid = await bcrypt.compare(req.body.password , user.password);
         if(!isValid){
-            return res.status(400).send({
+            return res.send({
                 message:'Password incorrect',
                 success: false
             });
@@ -61,14 +61,14 @@ router.post("/login", async (req,res) => {
         //check the password is match, if match create jwt token 
         const token = await jwt.sign({userId: user._id},process.env.SECRET_KEY,{expiresIn: "1d"});
         
-        res.send({
+        res.status(201).send({
             message: "Login successfull",
             success: true,
             token
         })
 
     }catch(error){
-        res.status(400).send({
+        res.send({
             message: error.message,
             success: false
         })
