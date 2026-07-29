@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { loginUser } from '../apiCalls/auth';
 
 const index = () => {
   const [user, setUser] = useState({
@@ -7,9 +8,21 @@ const index = () => {
     password:''
   });
 
-  const onLoginFormSubmit = (event) =>{
+  const onLoginFormSubmit = async (event) =>{
     event.preventDefault();
-    console.log(user);
+    let response = null;
+    try{
+      response = await loginUser(user);
+      if (response.success){
+        alert(response.message);
+        localStorage.setItem('token', response.token);
+        window.location.href = '/';
+      }else{
+        return alert(response.message);
+      }
+    }catch(error){
+      return alert(response.message);
+    }
   };
 
   return (
