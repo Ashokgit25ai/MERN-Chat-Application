@@ -1,16 +1,32 @@
-import React from 'react'
-import {useState} from 'react'
-const index = () => {
+import React from 'react';
+import {useState} from 'react';
+import { Link } from 'react-router-dom';
+import { signupUser } from '../apiCalls/auth';
 
+const index = () => {
   const [user, setUser] = useState({
     firstname:'',
     lastname:'',
     email:'',
     password:''
-  })
-  const onFormSubmit = (event) => {
+  });
+  
+  
+  const onFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(user);
+    let response = null;
+    
+    try{
+      response = await signupUser(user);
+      if (response.success){
+        return alert(response.message);
+      }else{
+        return alert(response.message);
+      }
+    }catch(error){
+      return alert(response.message);
+
+    }
   };
 
 
@@ -38,13 +54,13 @@ const index = () => {
           </form>
           <div className="card-terms">
             <span>Already have an account?
-              <a>Login Here</a>
+              <Link to='/login'>Login Here</Link>
             </span>
           </div>
         </div>
       </div>
     </div>
   )
-}
+};
 
-export default index
+export default index;
