@@ -1,17 +1,21 @@
 import React from 'react'
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import Home from './pages/home';
-import Login from './pages/login';
-import Signup from './pages/signup';
-import { Toaster } from 'react-hot-toast';
-import ProtectedRoute from './components/ProtectedRoute';
+import {BrowserRouter, Routes, Route} from "react-router-dom"
+import Home from './pages/home'
+import Login from './pages/login'
+import Signup from './pages/signup'
+import { Toaster } from 'react-hot-toast'
+import ProtectedRoute from './components/ProtectedRoute'
+import Loader from './redux/Loader'
+import { useSelector } from 'react-redux'
 
 
 const App = () => {
+  const { loader } = useSelector(state => state.loaderReducer)
   return (
     
     <div>
       <Toaster position="top-center" reverseOrder={true} />
+      {loader && <Loader />}
       <BrowserRouter>
         <Routes>
           <Route path='/' element={

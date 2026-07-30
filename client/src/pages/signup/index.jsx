@@ -3,8 +3,13 @@ import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { signupUser } from '../apiCalls/auth';
 import { toast } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader } from '../../redux/loaderSlice';
 
 const index = () => {
+
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState({
     firstname:'',
     lastname:'',
@@ -18,13 +23,16 @@ const index = () => {
     let response = null;
     
     try{
+      dispatch(showLoader());
       response = await signupUser(user);
+      dispatch(hideLoader());
       if (response.success){
         return toast.success(response.message);
       }else{
         return toast.error(response.message);
       }
     }catch(error){
+      dispatch(hideLoader());
       return toast.error(response.message);
 
     }
