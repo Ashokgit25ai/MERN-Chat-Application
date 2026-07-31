@@ -1,42 +1,45 @@
-import React, { useEffect , useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getLoggedUser } from '../pages/apiCalls/users';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getLoggedUser } from "../pages/apiCalls/users";
+import { useDispatch, useSelector } from "react-redux";
+import { hideLoader, showLoader } from "../redux/loaderSlice";
+import toast from "react-hot-toast";
+import { setUser } from "../redux/userSlice";
 
-const ProtectedRoute = ({children}) => {
-    const navigate = useNavigate();
+const ProtectedRoute = ({ children }) => {
+  const { user } = useSelector(state => state.userReducer);
 
-    const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const getLoggedInUser = async () => {
-      let response = null;
-      try{
-        response = await getLoggedUser();
-        if (response.success){
-          setUser(response.data);
-        }else{
-          navigate('/login');
-        }
-      }catch(error){
-        navigate('/login');
+  const getLoggedInUser = async () => {
+    let response = null;
+    try {
+      dispatch(showLoader());
+      response = await getLoggedUser();
+      dispatch(hideLoader());
+
+      if (response.success) {
+        dispatch(setUser(response.data));
+      } else {
+        toast.error(response.message)
+        window.location.href = '/login'
       }
-    };
+    } catch (error) {
+      dispatch(hideLoader());
+      navigate("/login");
+    }
+  };
 
-    useEffect(() => {
-       if (localStorage.getItem('token')){
-        //write a logic to get the current user details
-        getLoggedInUser();
-
-       }else{
-        navigate('/login');
-       }
-    });
-  return (
-    <div>
-      <p>{`Email: ${user?.email}`}</p>
-      <p>{`username: ${user?.firstname} ${user?.lastname}`}</p>
-      {children}
-    </div>
-  )
-}
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      //write a logic to get the current user details
+      getLoggedInUser();
+    } else {
+      navigate("/login");
+    }
+  }, []);
+  return <div>{children}</div>;
+};
 
 export default ProtectedRoute;
