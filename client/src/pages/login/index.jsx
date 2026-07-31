@@ -47,7 +47,7 @@ const index = () => {
               onChange={(e) => setUser({...user, email: e.target.value})} />
             <input type="password" placeholder='password' value={user.password} 
               onChange={(e) => setUser({...user, password: e.target.value})} />
-            <button>Login</button>
+            <button type="submit">Login</button>
           </form>
           <div className="card-terms">
             <span>Don't have an account yet?
