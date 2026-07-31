@@ -1,0 +1,87 @@
+/* ===========================
+   Home Page
+=========================== */
+
+.home-page {
+    width: 100vw;
+    height: 100vh;
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.app-header {
+    height: 70px;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 30px;
+}
+
+/* ===========================
+   Logo
+=========================== */
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.app-logo i {
+    color: #6366f1;
+    font-size: 28px;
+}
+
+/* ===========================
+   User Profile
+=========================== */
+
+.app-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logged-user-name {
+    color: #e2e8f0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.logged-user-profile-pic {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logged-user-profile-pic:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+}

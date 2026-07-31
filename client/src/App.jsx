@@ -5,30 +5,29 @@ import Login from './pages/login'
 import Signup from './pages/signup'
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute'
-import Loader from './redux/Loader'
+import Loader from './redux/components/Loader'
 import { useSelector } from 'react-redux'
 
 
 const App = () => {
   const { loader } = useSelector(state => state.loaderReducer)
   return (
-    
-    <div>
-      <Toaster position="top-center" reverseOrder={true} />
-      {loader && <Loader />}
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>}>
-          </Route>
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/signup' element={<Signup />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
-  )
+          <div>
+            <Toaster position="top-center" reverseOrder={true} />
+            {loader && <Loader />}
+            <BrowserRouter>
+              <Routes>
+                <Route path='/' element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>}>
+                </Route>
+                <Route path='/login' element={<Login />}></Route>
+                <Route path='/signup' element={<Signup />}></Route>
+              </Routes>
+            </BrowserRouter>
+          </div>
+          )
 }
 
 export default App
