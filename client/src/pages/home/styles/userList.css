@@ -1,0 +1,52 @@
+.user-search-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background-color: #16213e;
+    border-bottom: 1px solid #2d3e5f;
+}
+
+.user-profile-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #6366f1;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.filter-user-details {
+    flex: 1;
+}
+
+.user-display-name {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.user-display-email {
+    color: #b0b8d1;
+    font-size: 11px;
+}
+
+.user-start-chat-btn {
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.user-start-chat-btn:hover {
+    background-color: #4f46e5;
+}

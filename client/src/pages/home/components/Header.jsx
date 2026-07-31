@@ -1,10 +1,9 @@
 import React from 'react'
-import './header.css'
+import '../styles/header.css'
 import { useSelector } from 'react-redux'
 
 const Header = () => {
   const { user } = useSelector(state => state.userReducer);
-  console.log(user)
   const getFullName = () => {
     const firstName = user?.firstname?.toUpperCase()[0] + user?.firstname?.slice(1).toLowerCase();
     const lastName = user?.lastname?.toUpperCase()[0] + user?.lastname?.slice(1).toLowerCase();
