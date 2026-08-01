@@ -21,7 +21,7 @@ router.post("/new-message", authMiddleware, async (req , res) => {
             _id: req.body.chatId,
         },{
            lastMessage: savedMessage._id,
-            $inc: {unreadMessageCount: 1}
+            $inc: {unreadMessagesCount: 1}
         });
 
         res.status(201).send({
