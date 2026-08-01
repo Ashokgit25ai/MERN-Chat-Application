@@ -1,41 +1,87 @@
+/* Individual User Card */
 .user-search-filter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 15px;
-    background-color: #16213e;
-    border-bottom: 1px solid #2d3e5f;
+    margin-bottom: 3px;      /* Gap between user cards */
     cursor: pointer;
 }
 
+/* User Card */
+.filtered-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 15px;
+    border-radius: 10px;
+
+    background-color: #16213e;
+}
+
+.selected-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 15px;
+    border-radius: 10px;
+
+    background: linear-gradient(90deg, #233554, #1f2a48);
+
+    border-left: 4px solid #6366f1;
+    cursor: pointer;
+}
+
+.filtered-user:hover {
+    background-color: #1f2a48;
+    border-color: #6366f1;
+}
+
+/* Avatar */
 .user-profile-pic {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     background-color: #6366f1;
     color: white;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     font-size: 18px;
     font-weight: bold;
-    margin-right: 12px;
+
+    flex-shrink: 0;
 }
 
+/* User Details */
 .filter-user-details {
     flex: 1;
+    min-width: 0;
 }
 
 .user-display-name {
     color: white;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 4px;
 }
 
 .user-display-email {
     color: #b0b8d1;
-    font-size: 11px;
+    font-size: 12px;
+}
+
+.user-display-name,
+.user-display-email {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Start Chat Button */
+.user-start-chat {
+    flex-shrink: 0;
 }
 
 .user-start-chat-btn {
@@ -43,11 +89,24 @@
     color: white;
     border: none;
     padding: 8px 14px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.25s ease;
 }
 
 .user-start-chat-btn:hover {
     background-color: #4f46e5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filtered-user {
+        padding: 10px 12px;
+    }
+
+    .user-start-chat-btn {
+        padding: 7px 10px;
+        font-size: 13px;
+    }
 }
