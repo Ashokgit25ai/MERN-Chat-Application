@@ -7,6 +7,20 @@
     height: 100vh;
     background: #0f172a;
     color: #f8fafc;
+    overflow: hidden;
+}
+
+.main-content {
+    display: flex;
+    height: calc(100vh - 70px);
+    overflow: hidden;
+}
+
+.chat-area {
+    flex: 1;
+    min-width: 0;
+    border-left: 1px solid #334155;
+    background: #111827;
 }
 
 /* ===========================
@@ -22,7 +36,7 @@
     justify-content: space-between;
     align-items: center;
 
-    padding: 0 30px;
+    padding: 0 15px;
 }
 
 /* ===========================
@@ -34,7 +48,7 @@
     align-items: center;
     gap: 10px;
 
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
     letter-spacing: 0.5px;
@@ -57,7 +71,7 @@
 
 .logged-user-name {
     color: #e2e8f0;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
 }
 

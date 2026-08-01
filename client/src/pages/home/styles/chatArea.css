@@ -1,0 +1,97 @@
+.app-chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    background-color: #111827;
+    border-radius: 12px;
+    margin: 15px;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+
+
+.app-chat-area-header {
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 25px;
+
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
+
+    color: #f8fafc;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.app-chat-area {
+    display: flex;
+    flex-direction: column;
+    height: 95%;
+}
+
+.main-chat-area {
+    flex: 1;
+}
+
+
+/* ===========================
+   Send Message Area
+=========================== */
+
+.send-message-div {
+    padding: 15px 20px;
+    background-color: #1e293b;
+    border-top: 1px solid #334155;
+}
+
+/* ===========================
+   Message Input
+=========================== */
+
+.send-message-input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 55px 0 18px;
+
+    background-color: #0f172a;
+    color: #ffffff;
+
+    border: 1px solid #334155;
+    border-radius: 24px;
+
+    outline: none;
+    font-size: 15px;
+
+    transition: border-color 0.3s ease;
+}
+
+.send-message-input::placeholder {
+    color: #94a3b8;
+}
+
+.send-message-input:focus {
+    border-color: #6366f1;
+}
+
+/* ===========================
+   Send Button
+=========================== */
+
+.send-message-btn {
+    margin-left: -40px;
+    border: none;
+    background-color: transparent;
+    color: #6366f1;
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.send-message-btn:hover {
+    color: #8b5cf6;
+}
