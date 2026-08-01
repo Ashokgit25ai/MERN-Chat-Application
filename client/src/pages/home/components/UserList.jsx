@@ -1,19 +1,44 @@
 import React from "react";
 import "../styles/userList.css";
 import { useSelector } from "react-redux";
+import { createNewChat } from "../../apiCalls/chat";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "../../../redux/loaderSlice";
+import { setAllCurrentChats } from "../../../redux/userSlice";
 
 const UserList = ({ searchKey }) => {
-  const { allUsers } = useSelector((state) => state.userReducer);
-  const { allCurrentChats } = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+  const { allUsers,allCurrentChats, user: currentUser } = useSelector((state) => state.userReducer);
+
+   const startNewChat = async (searchedUserId) => {
+        try{
+            dispatch(showLoader());
+            const response = await createNewChat([currentUser._id, searchedUserId])
+            dispatch(hideLoader());
+
+            if (response.success){
+                toast.success(response.message);
+                const newChat = response.data;
+                const updatedChat = [...allCurrentChats, newChat]
+                dispatch(setAllCurrentChats(updatedChat));
+                console.log(allCurrentChats)
+                console.log('allUsers', allUsers.length)
+                console.log('allCurrentUsers', allCurrentChats.length)
+            }
+        }catch(error){
+            toast.error(response.message);
+            dispatch(hideLoader());
+        }
+    };
+
   return allUsers
     .filter((user) => {
-      return (
-        searchKey ?
-        `${user.firstname} ${user.lastname}`
-          .toLowerCase()
-          .includes(searchKey.toLowerCase()) :
-          allCurrentChats.some(chat => chat.members.includes(user._id))
-      );
+      return searchKey
+        ? `${user.firstname} ${user.lastname}`
+            .toLowerCase()
+            .includes(searchKey.toLowerCase())
+        : allCurrentChats.some((chat) => chat.members.includes(user._id));
     })
     .map((user) => (
       <div className="user-search-filter" key={user._id}>
@@ -38,7 +63,7 @@ const UserList = ({ searchKey }) => {
         </div>
         {!allCurrentChats.find((chat) => chat.members.includes(user._id)) && (
           <div className="user-start-chat">
-            <button className="user-start-chat-btn">Start Chat</button>
+            <button className="user-start-chat-btn" onClick={() => startNewChat(user._id)}>Start Chat</button>
           </div>
         )}
       </div>
