@@ -1,6 +1,6 @@
 /* Individual User Card */
 .user-search-filter {
-    margin-bottom: 3px;      /* Gap between user cards */
+    margin-top: 3px;      /* Gap between user cards */
     cursor: pointer;
 }
 
@@ -101,6 +101,7 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+
     .filtered-user {
         padding: 10px 12px;
     }

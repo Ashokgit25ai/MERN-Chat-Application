@@ -8,35 +8,25 @@
     margin: 15px;
     overflow: hidden;
     border: 1px solid #334155;
+    height: 95%; /*Combined your two .app-chat-area blocks*/
 }
-
 
 .app-chat-area-header {
     height: 70px;
-
     display: flex;
     align-items: center;
-
     padding: 0 25px;
-
     background-color: #1e293b;
     border-bottom: 1px solid #334155;
-
     color: #f8fafc;
     font-size: 18px;
     font-weight: 600;
 }
 
-.app-chat-area {
-    display: flex;
-    flex-direction: column;
-    height: 95%;
-}
-
 .main-chat-area {
     flex: 1;
+    overflow-y: auto; /*Ensures the chat area scrolls when full*/
 }
-
 
 /* ===========================
    Send Message Area
@@ -55,19 +45,14 @@
 .send-message-input {
     width: 100%;
     height: 48px;
-
     padding: 0 55px 0 18px;
-
     background-color: #0f172a;
     color: #ffffff;
-
     border: 1px solid #334155;
     border-radius: 15px;
-
     outline: none;
     font-size: 15px;
-
-    transition: border-color 0.3s ease;
+    transition: border-color 0.5s ease;
 }
 
 .send-message-input::placeholder {
@@ -88,7 +73,6 @@
     background-color: transparent;
     color: #6366f1;
     font-size: 20px;
-
     cursor: pointer;
 }
 
@@ -96,13 +80,13 @@
     color: #8b5cf6;
 }
 
-
 /* ===========================
    Message Container
 =========================== */
 
 .message-container {
     display: flex;
+    flex-direction: column; /* Changed: This stacks the message and timestamp vertically */
     margin: 10px 0;
 }
 
@@ -111,21 +95,15 @@
 =========================== */
 
 .send-message {
-    margin-left: auto ;
+    margin-left: auto;
     margin-right: 5px;
-
     max-width: 70%;
     padding: 10px 16px;
-
     background-color: #6366f1;
     color: #ffffff;
-
     border-radius: 13px 0px 13px 13px;
-    
-
     font-size: 14px;
     line-height: 1.5;
-
     word-wrap: break-word;
 }
 
@@ -136,18 +114,63 @@
 .received-message {
     margin-right: auto;
     margin-left: 5px;
-
     max-width: 70%;
     padding: 10px 16px;
-
     background-color: #1e293b;
     color: #f8fafc;
-
     border: 1px solid #334155;
-    border-radius: 13px 0px 13px 13px;
-
+    border-radius: 0px 13px 13px 13px;
     font-size: 14px;
     line-height: 1.5;
-
     word-wrap: break-word;
+}
+
+/* ===========================
+   Timestamps
+=========================== */
+
+.message-timestamp {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.send-time {
+    align-self: flex-end;
+    margin-right: 5px;
+}
+
+.received-time {
+    align-self: flex-start;
+    margin-left: 5px;
+}
+
+/* ===========================
+   Purple Scrollbar
+=========================== */
+
+/* Firefox support */
+.main-chat-area {
+    scrollbar-width:none ;
+    scrollbar-color: #6366f1 #0f172a; /* thumb | track */
+}
+
+/* Chrome, Safari, Edge support */
+.main-chat-area::-webkit-scrollbar {
+    width: 6px;
+    display: none;
+}
+
+.main-chat-area::-webkit-scrollbar-track {
+    background: #0f172a; /* Dark track color matching input background */
+    border-radius: 10px;
+}
+
+.main-chat-area::-webkit-scrollbar-thumb {
+    background: #6366f1; /* Purple thumb matching send button */
+    border-radius: 10px;
+}
+
+.main-chat-area::-webkit-scrollbar-thumb:hover {
+    background: #8b5cf6; /* Brighter purple on hover */
 }
