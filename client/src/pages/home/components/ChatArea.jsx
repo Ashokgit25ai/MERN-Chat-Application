@@ -93,7 +93,7 @@ const ChatArea = () => {
     if (!selectedChats?._id) return;
     getMessages();
 
-    if(selectedChats.lastMessage.sender !== user._id) {
+    if(selectedChats?.lastMessage?.sender !== user._id) {
       clearUnreadMessages();
     }
   }, [selectedChats])
@@ -114,7 +114,7 @@ const ChatArea = () => {
                           {msg.text}
                         </div>
                         <div className={`message-timestamp ${isCurrentUserSender ? 'send-time' : 'received-time'}`}>
-                          {formatTime(msg.createdAt)}
+                          {formatTime(msg.createdAt)} {msg.sender === user._id && (msg.read ? <i className="fa-solid fa-check-double read-icon"></i> : <i className="fa-solid fa-check-double sent-icon"></i>) }
                         </div>
                       </div>
             })}

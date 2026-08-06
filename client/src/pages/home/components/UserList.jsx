@@ -23,7 +23,6 @@ const UserList = ({ searchKey }) => {
                 const updatedChat = [...allCurrentChats, newChat]
                 dispatch(setAllCurrentChats(updatedChat));
                 dispatch(setSelectedChats(newChat));
-                console.log(newChat)
             }
         }catch(error){
             toast.error(response.message);
@@ -83,7 +82,7 @@ const UserList = ({ searchKey }) => {
       const chat = allCurrentChats.find(chat => 
         chat.members.map(m => m._id).includes(userId));
       
-      if (chat._id && chat.unreadMessagesCount && chat.lastMessage.sender !== currentUser._id) {
+      if (chat?._id && chat?.unreadMessagesCount && chat?.lastMessage?.sender !== currentUser?._id) {
         return <div className="unread-message-counter"> {chat.unreadMessagesCount} </div>;
       }else {
         return "";
@@ -91,18 +90,28 @@ const UserList = ({ searchKey }) => {
       
     }
 
+    const getData = () => {
+      if (searchKey === "") {
+        console.log('chats',allCurrentChats)
+        console.log('users',allUsers)
+        return allCurrentChats;
+      }else {
+        return allUsers.filter(user => {
+          return `${user.firstname} ${user.lastname}`
+                .toLowerCase()
+                .includes(searchKey.toLowerCase())
+        })
+      }
+    }
 
 
-  return allUsers
-    .filter((user) => {
-      return searchKey
-        ? `${user.firstname} ${user.lastname}`
-            .toLowerCase()
-            .includes(searchKey.toLowerCase())
-        : allCurrentChats.some((chat) => chat.members.map(m => m._id).includes(user._id));
-    })
-    .map((user) => (
-      <div className="user-search-filter" onClick={() => openChat(user._id)} key={user._id}>
+  return getData()
+    .map(obj => {
+      let user = obj;
+      if(obj.members) {
+        user = obj.members.find(m => m._id !== currentUser._id);
+      }
+      return (<div className="user-search-filter" onClick={() => openChat(user._id)} key={user._id}>
           <div className={isSelectedChat(user) ? "selected-user" : "filtered-user"}>
           {user.profilePic && (
             <div className="user-profile-pic">
@@ -115,8 +124,8 @@ const UserList = ({ searchKey }) => {
           )}
           {!user.profilePic && (
             <div className="user-profile-pic">
-              {user.firstname.charAt(0).toUpperCase() +
-                user.lastname.charAt(0).toUpperCase()}
+              {user.firstname?.at(0).toUpperCase() +
+                user.lastname?.at(0).toUpperCase()}
             </div>
           )}
           <div className="filter-user-details">
@@ -137,7 +146,8 @@ const UserList = ({ searchKey }) => {
           )}
         </div>
       </div>
-    ));
+    )
+  });
 };
 
 export default UserList;
