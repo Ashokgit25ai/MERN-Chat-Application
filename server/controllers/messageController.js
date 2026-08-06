@@ -8,7 +8,7 @@ const { trusted } = require("mongoose");
 router.post("/new-message", authMiddleware, async (req , res) => {
     try{
         //save the message in the message collection
-        const newMessage = await Message(req.body);
+        const newMessage = await new Message(req.body);
         const savedMessage = await newMessage.save();
 
         //update the last message in the chat collection
@@ -17,18 +17,27 @@ router.post("/new-message", authMiddleware, async (req , res) => {
         // currentChat.lastmessage = savedMessage._id
         // await currentChat.save()
 
-        const currentChat = await Chat.findOneAndUpdate({
-            _id: req.body.chatId,
-        },{
-           lastMessage: savedMessage._id,
-            $inc: {unreadMessagesCount: 1}
-        });
+        const currentChat = await Chat.findOneAndUpdate(
+            {
+                _id: req.body.chatId,
+            },{
+                $set: {lastMessage: savedMessage._id},
+                $inc: {unreadMessagesCount: 1}
+            }, 
+            {new: true});
 
-        res.status(201).send({
-            success: true,
-            message: "Message sent successfully",
-            data: savedMessage
-        });
+            if (!currentChat){
+                return res.status(404).send({
+                    success: false,
+                    message: "Chat not found!"
+                });
+            }
+
+            res.status(201).send({
+                success: true,
+                message: "Message sent successfully",
+                data: savedMessage
+            });
 
     }catch(error){
         res.status(400).send({
@@ -58,3 +67,4 @@ router.get("/get-all-messages/:chatId", authMiddleware, async (req , res) => {
 });
 
 module.exports = router;
+

@@ -4,11 +4,12 @@ import "../styles/chatArea.css";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import toast from "react-hot-toast";
 import { createNewMessage, getAllMessages } from "../../apiCalls/message";
+import { clearUnreadMessageCount } from "../../apiCalls/chat";
 import moment from 'moment';
 
 const ChatArea = () => {
   const dispatch = useDispatch();
-  const { selectedChats, user } = useSelector((state) => state.userReducer);
+  const { selectedChats, user, allCurrentChats } = useSelector((state) => state.userReducer);
   const selectedUser = selectedChats?.members?.find((u) => u?._id && u._id !== user?._id);
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
@@ -64,10 +65,37 @@ const ChatArea = () => {
     }
   };
 
-  useEffect(() => {
+  const clearUnreadMessages = async ()=> {
+      try{
 
+        dispatch(showLoader());
+        const response = await clearUnreadMessageCount(selectedChats?._id);
+        dispatch(hideLoader());
+
+        console.log(response);
+
+        if(response.success) {
+          allCurrentChats.map(chat => {
+            if (chat._id === selectedChats?._id) {
+              return response.data;
+            }      
+            return chat;
+          });
+        }
+
+      }catch(error){
+        dispatch(hideLoader());
+        toast.error(error.message);
+      }
+    }
+
+  useEffect(() => {
+    if (!selectedChats?._id) return;
     getMessages();
 
+    if(selectedChats.lastMessage.sender !== user._id) {
+      clearUnreadMessages();
+    }
   }, [selectedChats])
 
   return (

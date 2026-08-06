@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "../styles/userList.css";
 import { useSelector } from "react-redux";
-import { createNewChat } from "../../apiCalls/chat";
+import { clearUnreadMessageCount, createNewChat } from "../../apiCalls/chat";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import { setAllCurrentChats, setSelectedChats } from "../../../redux/userSlice";
+import moment from "moment";
 
 const UserList = ({ searchKey }) => {
   const dispatch = useDispatch();
@@ -49,6 +50,48 @@ const UserList = ({ searchKey }) => {
       return false;
     };
 
+    const getLastMessage = (userId) => {
+      const chat = allCurrentChats.find(chat => chat.members.map(m => m._id).includes(userId));
+
+      if (!chat || !chat?.lastMessage){
+        return ''
+      }else{
+        const prefix = chat?.lastMessage?.sender === currentUser._id ? "You: " : '';
+        return `${prefix} ${chat?.lastMessage?.text?.substring(0,25)}`;
+      }
+    };
+
+    const getLastMessageTimeStamp = (userId) => {
+     const chat =  allCurrentChats.find(chat => chat.members.map(m => m._id).includes(userId));
+     
+      if (!chat || !chat?.lastMessage){
+        return '' 
+      }else{
+        return moment(chat?.lastMessage?.createdAt).format('hh:mm A');
+      }
+    };
+
+    const getFullName = (user) => {
+      const fName = user?.firstname?.at(0).toUpperCase() + user?.firstname?.slice(1).toLowerCase();
+      const lName = user?.lastname?.at(0).toUpperCase() + user?.lastname?.slice(1).toLowerCase();
+
+      return `${fName} ${lName}`;
+    };
+
+
+    const getUnreadMessageCount = (userId) => {
+      const chat = allCurrentChats.find(chat => 
+        chat.members.map(m => m._id).includes(userId));
+      
+      if (chat._id && chat.unreadMessagesCount && chat.lastMessage.sender !== currentUser._id) {
+        return <div className="unread-message-counter"> {chat.unreadMessagesCount} </div>;
+      }else {
+        return "";
+      }
+      
+    }
+
+
 
   return allUsers
     .filter((user) => {
@@ -77,8 +120,15 @@ const UserList = ({ searchKey }) => {
             </div>
           )}
           <div className="filter-user-details">
-            <div className="user-display-name">{`${user.firstname} ${user.lastname}`}</div>
-            <div className="user-display-email">{user.email}</div>
+            <div className="user-display-name">{getFullName(user)}</div>
+            <div className="user-display-email">{getLastMessage(user._id) || user.email}</div>
+          </div>
+          <div className="read-time">
+            <div className="last-message-timestamp">
+              {getLastMessageTimeStamp(user._id)}
+            </div>
+            {getUnreadMessageCount(user._id)}
+            
           </div>
           {!allCurrentChats.find((chat) => chat.members.map(m => m._id).includes(user._id)) && (
             <div className="user-start-chat">
