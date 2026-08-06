@@ -4,10 +4,12 @@ import "../styles/chatArea.css";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import toast from "react-hot-toast";
 import { createNewMessage, getAllMessages } from "../../apiCalls/message";
+import { clearUnreadMessageCount } from "../../apiCalls/chat";
+import moment from 'moment';
 
 const ChatArea = () => {
   const dispatch = useDispatch();
-  const { selectedChats, user } = useSelector((state) => state.userReducer);
+  const { selectedChats, user, allCurrentChats } = useSelector((state) => state.userReducer);
   const selectedUser = selectedChats?.members?.find((u) => u?._id && u._id !== user?._id);
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
@@ -18,7 +20,6 @@ const ChatArea = () => {
         toast.error("Select a chat and enter a message");
         return;
       }
-
       const newMessage = {
         chatId: selectedChats._id,
         sender: user._id,
@@ -31,6 +32,19 @@ const ChatArea = () => {
     } catch (error) {
       dispatch(hideLoader());
       toast.error(error.message || "Failed to send message");
+    }
+  };
+
+  const formatTime = (time) => {
+    const now = moment();
+    const difference = now.diff(moment(time), 'days');
+
+    if (difference < 1) {
+      return `Today ${moment(time).format('hh:mm A')}`;
+    }else if (difference > 1) {
+      return `Yesterday ${moment(time).format('hh:mm A')}`;
+    }else {
+      return moment(time).format('MMM D, hh:mm A');
     }
   };
 
@@ -51,10 +65,37 @@ const ChatArea = () => {
     }
   };
 
-  useEffect(() => {
+  const clearUnreadMessages = async ()=> {
+      try{
 
+        dispatch(showLoader());
+        const response = await clearUnreadMessageCount(selectedChats?._id);
+        dispatch(hideLoader());
+
+        console.log(response);
+
+        if(response.success) {
+          allCurrentChats.map(chat => {
+            if (chat._id === selectedChats?._id) {
+              return response.data;
+            }      
+            return chat;
+          });
+        }
+
+      }catch(error){
+        dispatch(hideLoader());
+        toast.error(error.message);
+      }
+    }
+
+  useEffect(() => {
+    if (!selectedChats?._id) return;
     getMessages();
 
+    if(selectedChats.lastMessage.sender !== user._id) {
+      clearUnreadMessages();
+    }
   }, [selectedChats])
 
   return (
@@ -66,15 +107,17 @@ const ChatArea = () => {
           </div>
 
           <div className="main-chat-area">
-            {allMessages.map(msg => (
-              <div className="message-container">
-              <div className="send-message">
-                {msg.text}
-              </div>
-            </div>
-
-            ))} 
-            
+            {allMessages.map(msg => {
+              const isCurrentUserSender = msg.sender === user._id;
+              return <div className="message-container" key={msg._id}>
+                        <div className={isCurrentUserSender? "send-message" : "received-message"}>
+                          {msg.text}
+                        </div>
+                        <div className={`message-timestamp ${isCurrentUserSender ? 'send-time' : 'received-time'}`}>
+                          {formatTime(msg.createdAt)}
+                        </div>
+                      </div>
+            })}
           </div>
 
           <div className="send-message-div">

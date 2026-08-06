@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Chat = require("../models/chat");
 const authMiddleware = require("../middlewares/authMiddleware")
-
+const Message = require('../models/message')
 
 router.post("/create-new-chat", authMiddleware, async (req,res) => {
     try{
@@ -25,7 +25,9 @@ router.post("/create-new-chat", authMiddleware, async (req,res) => {
 router.get("/get-all-chats", authMiddleware, async (req,res) => {
     try{
         const allChats = await Chat.find({members: req.userId})
-                                    .populate('members').sort({updatedAt: -1});
+                                    .populate('members')
+                                    .populate('lastMessage')
+                                    .sort({updatedAt: -1});
 
         res.status(201).send({
             message: 'Chat fetched successfully',
@@ -41,3 +43,43 @@ router.get("/get-all-chats", authMiddleware, async (req,res) => {
 });
 
 module.exports = router;
+
+
+router.post('/clear-unread-message', authMiddleware, async (req,res) => {
+    try{
+        const chatId = req.body?.chatId;
+
+        const chat = await Chat.findById(chatId);
+
+        if (!chat) {
+           return res.status(404).send({
+                message: 'No chat is available with this Chat ID',
+                success: false
+            });
+        }
+
+        const updatedChat = await Chat.findByIdAndUpdate(
+            chatId,
+            {unreadMessagesCount: 0},
+            {returnDocument: 'after'}
+        ).populate('members').populate('lastMessage');
+ 
+        await Message.updateMany(
+            {chatId: chatId, read: false},
+            {read: true}
+        );
+
+        res.send({
+            message: 'Unread messges cleared successfully',
+            success: true,
+            date: updatedChat
+        });
+
+        
+    }catch(error){
+        res.status(400).send({
+            message: error.message,
+            success: false
+        });
+    }
+})
