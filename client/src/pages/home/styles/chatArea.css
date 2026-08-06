@@ -174,3 +174,18 @@
 .main-chat-area::-webkit-scrollbar-thumb:hover {
     background: #8b5cf6; /* Brighter purple on hover */
 }
+
+
+.sent-icon,
+.read-icon {
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+.sent-icon {
+    color: #bdbdbd; /* Gray */
+}
+
+.read-icon {
+    color: #4fc3f7; /* Blue */
+}
