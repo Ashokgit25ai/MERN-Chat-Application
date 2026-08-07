@@ -20,7 +20,7 @@ const index = () => {
     <div className='home-page'>
       <Header />
       <div className="main-content">
-        <Sidebar />
+        <Sidebar socket={socket} />
         {selectedChats && <ChatArea className="chat-area" socket={socket} />}
       </div>
     </div>
