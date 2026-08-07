@@ -25,7 +25,7 @@
 
 .main-chat-area {
     flex: 1;
-    overflow-y: auto; /*Ensures the chat area scrolls when full*/
+    overflow-y: scroll; /*Ensures the chat area scrolls when full*/
 }
 
 /* ===========================
@@ -151,14 +151,13 @@
 
 /* Firefox support */
 .main-chat-area {
-    scrollbar-width:none ;
+    scrollbar-width:thin ;
     scrollbar-color: #6366f1 #0f172a; /* thumb | track */
 }
 
 /* Chrome, Safari, Edge support */
 .main-chat-area::-webkit-scrollbar {
     width: 6px;
-    display: none;
 }
 
 .main-chat-area::-webkit-scrollbar-track {

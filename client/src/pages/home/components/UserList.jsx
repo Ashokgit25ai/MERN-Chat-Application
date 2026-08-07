@@ -92,8 +92,6 @@ const UserList = ({ searchKey }) => {
 
     const getData = () => {
       if (searchKey === "") {
-        console.log('chats',allCurrentChats)
-        console.log('users',allUsers)
         return allCurrentChats;
       }else {
         return allUsers.filter(user => {
