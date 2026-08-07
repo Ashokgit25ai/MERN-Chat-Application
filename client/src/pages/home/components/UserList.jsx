@@ -130,7 +130,7 @@ const UserList = ({ searchKey, socket }) => {
       "receive-message",
       (message) => {
         const selectedChats = store.getState().userReducer.selectedChats;
-        const allCurrentChats = store.getState().userReducer.allCurrentChats;
+        let allCurrentChats = store.getState().userReducer.allCurrentChats;
 
         if (selectedChats?._id !== message.chatId) {
           const updatedChats = allCurrentChats.map((chat) => {
@@ -143,10 +143,18 @@ const UserList = ({ searchKey, socket }) => {
             }
             return chat;
           });
-          dispatch(setAllCurrentChats(updatedChats));
+          allCurrentChats = updatedChats;
         }
-      },
-    );
+        //Find the latest chat
+        const latestChat = allCurrentChats.find(chat => chat._id === message.chatId);
+        //Get all remaining chats
+        const otherChats = allCurrentChats.filter(chat => chat._id !== message.chatId);
+        //Create new updated chat list
+        allCurrentChats = [latestChat, ...otherChats]
+
+          
+        dispatch(setAllCurrentChats(allCurrentChats));
+      });
   }, []);
 
   return getData().map((obj) => {
