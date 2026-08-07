@@ -6,8 +6,9 @@ import toast from "react-hot-toast";
 import { createNewMessage, getAllMessages } from "../../apiCalls/message";
 import { clearUnreadMessageCount } from "../../apiCalls/chat";
 import moment from 'moment';
+import store from './../../../redux/store'
 
-const ChatArea = () => {
+const ChatArea = ({ socket }) => {
   const dispatch = useDispatch();
   const { selectedChats, user, allCurrentChats } = useSelector((state) => state.userReducer);
   const selectedUser = selectedChats?.members?.find((u) => u?._id && u._id !== user?._id);
@@ -25,12 +26,16 @@ const ChatArea = () => {
         sender: user._id,
         text: message.trim(),
       };
-      dispatch(showLoader());
+
+      socket.emit('send-message', {
+        ...newMessage,
+        members: selectedChats.members.map(m => m._id),
+        read: false,
+        createdAt: new Date().toISOString()
+      });
       await createNewMessage(newMessage);
-      dispatch(hideLoader());
       setMessage("");
     } catch (error) {
-      dispatch(hideLoader());
       toast.error(error.message || "Failed to send message");
     }
   };
@@ -39,11 +44,12 @@ const ChatArea = () => {
     const now = moment();
     const difference = now.diff(moment(time), 'days');
 
-    if (difference < 1) {
+    if (difference === 0) {
       return `Today ${moment(time).format('hh:mm A')}`;
-    }else if (difference > 1) {
+    }else if (difference === 1) {
       return `Yesterday ${moment(time).format('hh:mm A')}`;
     }else {
+      
       return moment(time).format('MMM D, hh:mm A');
     }
   };
@@ -96,20 +102,33 @@ const ChatArea = () => {
     if(selectedChats?.lastMessage?.sender !== user._id) {
       clearUnreadMessages();
     }
+
+    socket.off('receive-message').on('receive-message', data => {
+      const selectedChats = store.getState().userReducer.selectedChats;
+      if (selectedChats._id === data.chatId) {
+        setAllMessages(prevMsgs => [...prevMsgs, data]);
+      }
+    })
   }, [selectedChats])
+
+  useEffect(() => {
+    const msgBoxContainer = document.getElementById('main-chat-box-container');
+    msgBoxContainer.scrollTop = msgBoxContainer.scrollHeight;
+  }, [allMessages]);
+
 
   return (
     <>
       {selectedChats && (
-        <div className="app-chat-area">
+        <div className="app-chat-area" >
           <div className="app-chat-area-header">
             {selectedUser ? `${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim() : "Select a chat"}
           </div>
 
-          <div className="main-chat-area">
+          <div id="main-chat-box-container" className="main-chat-area" >
             {allMessages.map(msg => {
               const isCurrentUserSender = msg.sender === user._id;
-              return <div className="message-container" key={msg._id}>
+              return <div className="message-container" key={msg?._id}>
                         <div className={isCurrentUserSender? "send-message" : "received-message"}>
                           {msg.text}
                         </div>
