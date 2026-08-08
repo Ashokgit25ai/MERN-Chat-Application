@@ -7,6 +7,7 @@ const messageRouter = require("./controllers/messageController");
 
 //use auth controller routers
 app.use(express.json());
+
 const server = require("http").createServer(app);
 
 const io = require("socket.io")(server, {
@@ -36,6 +37,10 @@ io.on("connection", (socket) => {
     io.to(data.members[0])
       .to(data.members[1])
       .emit("messages-count-cleared", data);
+  });
+
+  socket.on("user-typing", (data) => {
+    io.to(data.members[0]).to(data.members[1]).emit("started-typing", data);
   });
 });
 

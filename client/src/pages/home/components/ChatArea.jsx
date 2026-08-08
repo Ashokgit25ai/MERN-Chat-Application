@@ -19,6 +19,7 @@ const ChatArea = ({ socket }) => {
   );
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const sendMessage = async () => {
     try {
@@ -65,25 +66,23 @@ const ChatArea = ({ socket }) => {
       dispatch(showLoader());
       const response = await getAllMessages(selectedChats._id);
       dispatch(hideLoader());
-
       if (response.success) {
         setAllMessages(response.data);
       }
     } catch (error) {
-      dispatch(hideLoader());
       toast.error(error.message || "Failed to load messages");
     }
   };
 
   const clearUnreadMessages = async () => {
     try {
-      socket.emit('clear-unread-messages', {
+      socket.emit("clear-unread-messages", {
         chatId: selectedChats._id,
-        members: selectedChats.members.map(m => m._id)
+        members: selectedChats.members.map((m) => m._id),
       });
 
       const response = await clearUnreadMessageCount(selectedChats?._id);
-    
+
       if (response.success) {
         allCurrentChats.map((chat) => {
           if (chat._id === selectedChats?._id) {
@@ -116,32 +115,42 @@ const ChatArea = ({ socket }) => {
       }
     });
 
-    socket.off('messages-count-cleared').on('messages-count-cleared', data => {
-      const allCurrentChats = store.getState().userReducer.allCurrentChats;
-      const selectedChats = store.getState().userReducer.selectedChats;
+    socket
+      .off("messages-count-cleared")
+      .on("messages-count-cleared", (data) => {
+        const allCurrentChats = store.getState().userReducer.allCurrentChats;
+        const selectedChats = store.getState().userReducer.selectedChats;
 
-      if (selectedChats._id === data.chatId) {
-        //Updating the unread msg count
-        const updatedChats = allCurrentChats.map(chat => {
-          if (chat._id === data.chatId) {
-            return {
-              ...chat,
-              unreadMessagesCount: 0
+        if (selectedChats._id === data.chatId) {
+          //Updating the unread msg count
+          const updatedChats = allCurrentChats.map((chat) => {
+            if (chat._id === data.chatId) {
+              return {
+                ...chat,
+                unreadMessagesCount: 0,
+              };
             }
-          }
-          return chat;
-        })
-        dispatch(setAllCurrentChats(updatedChats));
+            return chat;
+          });
+          dispatch(setAllCurrentChats(updatedChats));
 
           //updating the read property in message object
-        setAllMessages(prevMsgs => {
-          return prevMsgs.map(msg => {
-            return { ...msg, read: true}
-          })
-        })
+          setAllMessages((prevMsgs) => {
+            return prevMsgs.map((msg) => {
+              return { ...msg, read: true };
+            });
+          });
+        }
+    });
+
+    socket.on('started-typing', data => {
+      if (selectedChats._id === data.chatId && data.sender !== user._id) {
+        setIsTyping(true);
+        setTimeout(() => {
+          setIsTyping(false);
+        }, 2000);
       }
     })
-
 
   }, [selectedChats]);
 
@@ -186,6 +195,7 @@ const ChatArea = ({ socket }) => {
                 </div>
               );
             })}
+            <div className="typing-indicator">{isTyping && <i>typing...</i>}</div>
           </div>
 
           <div className="send-message-div">
@@ -194,7 +204,14 @@ const ChatArea = ({ socket }) => {
               className="send-message-input"
               placeholder="Type a message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                socket.emit("user-typing", {
+                  chatId: selectedChats._id,
+                  members: selectedChats.members.map(m => m._id),
+                  sender: user._id
+                });
+              }}
             />
             <button
               onClick={sendMessage}
