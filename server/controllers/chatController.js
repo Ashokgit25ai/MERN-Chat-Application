@@ -73,7 +73,7 @@ router.post('/clear-unread-message', authMiddleware, async (req,res) => {
         res.send({
             message: 'Unread messges cleared successfully',
             success: true,
-            date: updatedChat
+            data: updatedChat
         });
 
         
