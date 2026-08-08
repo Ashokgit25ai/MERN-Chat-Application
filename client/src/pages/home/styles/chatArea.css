@@ -38,6 +38,11 @@
     border-top: 1px solid #334155;
 }
 
+
+.message-input-container {
+    position: relative;
+    width: 100%;
+}
 /* ===========================
    Message Input
 =========================== */
@@ -45,7 +50,7 @@
 .send-message-input {
     width: 100%;
     height: 48px;
-    padding: 0 55px 0 18px;
+    padding: 0 85px 0 18px;
     background-color: #0f172a;
     color: #ffffff;
     border: 1px solid #334155;
@@ -54,6 +59,38 @@
     font-size: 15px;
     transition: border-color 0.5s ease;
 }
+
+.send-emoji-btn {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+
+    color: #94a3b8;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.send-emoji-btn:hover {
+    color: #6366f1;
+}
+
+.emoji-picker {
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    z-index: 1000;
+}
+
+/* Desktop */
+.emoji-picker .EmojiPickerReact {
+    width: 320px !important;
+    height: 400px !important;
+}
+
 
 .send-message-input::placeholder {
     color: #94a3b8;
@@ -68,9 +105,12 @@
 =========================== */
 
 .send-message-btn {
-    margin-left: -40px;
+    position:absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     border: none;
-    background-color: transparent;
+    background: transparent;
     color: #6366f1;
     font-size: 20px;
     cursor: pointer;
