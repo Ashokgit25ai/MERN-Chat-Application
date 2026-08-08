@@ -2,7 +2,7 @@ import React, { useState }  from 'react'
 import '../styles/sideBar.css'
 import Search from './Search'
 import UserList from './UserList';
-const Sidebar = ( { socket } ) => {
+const Sidebar = ( { socket, onlineUsers } ) => {
     const [searchKey, setSearchKey] = useState('');
 
   return (
@@ -13,7 +13,11 @@ const Sidebar = ( { socket } ) => {
             setSearchKey={setSearchKey} 
         />
         {/* user list */}
-        <UserList searchKey={searchKey} socket={socket} />
+        <UserList 
+          searchKey={searchKey}
+          socket={socket} 
+          onlineUsers={onlineUsers}
+        />
       
     </div>
   )
