@@ -157,7 +157,7 @@ const ChatArea = ({ socket }) => {
   useEffect(() => {
     const msgBoxContainer = document.getElementById("main-chat-box-container");
     msgBoxContainer.scrollTop = msgBoxContainer.scrollHeight;
-  }, [allMessages]);
+  }, [allMessages, isTyping]);
 
   return (
     <>
