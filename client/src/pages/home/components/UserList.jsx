@@ -126,36 +126,33 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
   };
 
   useEffect(() => {
-    socket.on(
-      "receive-message",
-      (message) => {
-        const selectedChats = store.getState().userReducer.selectedChats;
-        let allCurrentChats = store.getState().userReducer.allCurrentChats;
+    socket.off("set-message-count").on("set-message-count", (message) => {
+      const selectedChats = store.getState().userReducer.selectedChats;
+      let allCurrentChats = store.getState().userReducer.allCurrentChats;
 
-        if (selectedChats?._id !== message.chatId) {
-          const updatedChats = allCurrentChats.map((chat) => {
-            if (chat._id === message.chatId) {
-              return {
-                ...chat,
-                unreadMessagesCount: (chat?.unreadMessagesCount || 0) + 1,
-                lastMessage: message,
-              };
-            }
-            return chat;
-          });
-          allCurrentChats = updatedChats;
+      const updatedChats = allCurrentChats.map((chat) => {
+        if (chat._id === message.chatId) {
+          const shouldIncrement =
+            selectedChats?._id !== message.chatId &&
+            message.sender !== currentUser._id;
+          return {
+            ...chat,
+            lastMessage: message,
+            unreadMessagesCount: shouldIncrement
+              ? (chat?.unreadMessagesCount || 0) + 1
+              : chat?.unreadMessagesCount || 0,
+          };
         }
-        //Find the latest chat
-        const latestChat = allCurrentChats.find(chat => chat._id === message.chatId);
-        //Get all remaining chats
-        const otherChats = allCurrentChats.filter(chat => chat._id !== message.chatId);
-        //Create new updated chat list
-        allCurrentChats = [latestChat, ...otherChats]
-
-          
-        dispatch(setAllCurrentChats(allCurrentChats));
+        return chat;
       });
-  }, []);
+
+      const latestChat = updatedChats.find((chat) => chat._id === message.chatId);
+      const otherChats = updatedChats.filter((chat) => chat._id !== message.chatId);
+      allCurrentChats = latestChat ? [latestChat, ...otherChats] : updatedChats;
+
+      dispatch(setAllCurrentChats(allCurrentChats));
+    });
+  }, [currentUser?._id]);
 
   return getData().map((obj) => {
     let user = obj;

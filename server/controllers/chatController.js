@@ -59,16 +59,17 @@ router.post('/clear-unread-message', authMiddleware, async (req,res) => {
             });
         }
 
+        await Message.updateMany(
+            {chatId: chatId, read: false},
+            {read: true}
+        );
+
         const updatedChat = await Chat.findByIdAndUpdate(
             chatId,
             {unreadMessagesCount: 0},
             {returnDocument: 'after'}
         ).populate('members').populate('lastMessage');
  
-        await Message.updateMany(
-            {chatId: chatId, read: false},
-            {read: true}
-        );
 
         res.send({
             message: 'Unread messges cleared successfully',
