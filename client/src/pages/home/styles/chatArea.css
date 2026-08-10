@@ -12,14 +12,14 @@
 }
 
 .app-chat-area-header {
-    height: 70px;
+    height: 60px;
     display: flex;
     align-items: center;
     padding: 0 25px;
     background-color: #1e293b;
     border-bottom: 1px solid #334155;
     color: #f8fafc;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -33,9 +33,7 @@
 =========================== */
 
 .send-message-div {
-    padding: 15px 20px;
-    background-color: #1e293b;
-    border-top: 1px solid #334155;
+    padding: 0px 10px 5px;
 }
 
 
@@ -54,7 +52,7 @@
     background-color: #0f172a;
     color: #ffffff;
     border: 1px solid #334155;
-    border-radius: 15px;
+    border-radius: 30px;
     outline: none;
     font-size: 15px;
     transition: border-color 0.5s ease;
@@ -111,7 +109,7 @@
     transform: translateY(-50%);
     border: none;
     background: transparent;
-    color: #6366f1;
+    color: #94a3b8;
     font-size: 20px;
     cursor: pointer;
 }
@@ -120,6 +118,22 @@
     color: #8b5cf6;
 }
 
+.send-image-btn {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+    font-size: 18px;
+
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.send-image-btn:hover {
+    color: #6366f1;
+}
 /* ===========================
    Message Container
 =========================== */

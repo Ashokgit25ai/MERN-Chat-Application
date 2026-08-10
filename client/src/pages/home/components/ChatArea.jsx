@@ -24,9 +24,9 @@ const ChatArea = ({ socket }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const sendMessage = async () => {
+  const sendMessage = async (image) => {
     try {
-      if (!selectedChats?._id || !user?._id || !message.trim()) {
+      if (!selectedChats?._id || !user?._id || (!message.trim() && !image)) {
         toast.error("Select a chat and enter a message");
         return;
       }
@@ -34,6 +34,7 @@ const ChatArea = ({ socket }) => {
         chatId: selectedChats._id,
         sender: user._id,
         text: message.trim(),
+        image
       };
 
       socket.emit("send-message", {
@@ -100,6 +101,17 @@ const ChatArea = ({ socket }) => {
       toast.error(error.message);
     }
   };
+
+  const sendImage = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onloadend = async () => {
+      sendMessage(reader.result)
+    }
+  }
 
   useEffect(() => {
     if (!selectedChats?._id) return;
@@ -184,7 +196,8 @@ const ChatArea = ({ socket }) => {
                       isCurrentUserSender ? "send-message" : "received-message"
                     }
                   >
-                    {msg.text}
+                    <div>{msg.text}</div>
+                    <div>{msg.image && <img src={msg.image} alt="image" height={120} width={120} />}</div>
                   </div>
                   <div
                     className={`message-timestamp ${isCurrentUserSender ? "send-time" : "received-time"}`}
@@ -206,31 +219,40 @@ const ChatArea = ({ socket }) => {
           <div className="send-message-div">
             <div className="message-input-container">
 
-              <div className="emoji-picker">
-                {showEmojiPicker && <EmojiPicker onEmojiClick={(e) => setMessage((prev) => prev + e.emoji)} />}
+              <div className="emoji-picker" style={{width:'100%', display:'flex', padding:'0px, 20px', justifyContent:'right', marginTop:'-20px' }}>
+                {showEmojiPicker && <EmojiPicker style={{width:'300px', height:'30px'}} onEmojiClick={(e) => setMessage((prev) => prev + e.emoji)} />}
               </div>
               <input
-              type="text"
-              className="send-message-input"
-              placeholder="Type a message"
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                socket.emit("user-typing", {
-                  chatId: selectedChats._id,
-                  members: selectedChats.members.map(m => m._id),
-                  sender: user._id
-                });
-              }}
-            />
-            <button
-              onClick={(e) => setShowEmojiPicker(!showEmojiPicker)}
-              className="fa-regular fa-face-smile send-emoji-btn"
-            ></button>
-            <button
-              onClick={sendMessage}
-              className="fa fa-paper-plane send-message-btn"
-            ></button>
+                type="text"
+                className="send-message-input"
+                placeholder="Type a message"
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  socket.emit("user-typing", {
+                    chatId: selectedChats._id,
+                    members: selectedChats.members.map(m => m._id),
+                    sender: user._id
+                  });
+                }}
+              />
+              <label htmlFor="file">
+                <i className="fa-regular fa-image send-image-btn"></i>
+                <input type="file" 
+                  id="file"
+                  accept="image/jpg, image/jpeg, image/png, image/gif"
+                  style={{display:'none'}}
+                  onChange={sendImage}
+                />
+              </label>
+              <button
+                onClick={(e) => setShowEmojiPicker(!showEmojiPicker)}
+                className="fa-regular fa-face-smile send-emoji-btn"
+              ></button>
+              <button
+                onClick={sendMessage}
+                className="fa fa-paper-plane send-message-btn"
+              ></button>
             
             </div>
             
