@@ -23,6 +23,7 @@ const ChatArea = ({ socket }) => {
   const [allMessages, setAllMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [data, setData] = useState(null);
 
   const sendMessage = async (image) => {
     try {
@@ -68,15 +69,20 @@ const ChatArea = ({ socket }) => {
     try {
       if (!selectedChats?._id) return;
 
+      console.log("show loader")
       dispatch(showLoader());
       const response = await getAllMessages(selectedChats._id);
-      dispatch(hideLoader());
+      console.log("api finished", response)
       if (response.success) {
         setAllMessages(response.data);
+      }else {
+        toast.error(response.message)
       }
     } catch (error) {
+      console.log('error', error)
       toast.error(error.message || "Failed to load messages");
-      dispatch(hideLoader());
+     } finally {
+        dispatch(hideLoader());
     }
   };
 
@@ -88,14 +94,20 @@ const ChatArea = ({ socket }) => {
       });
 
       const response = await clearUnreadMessageCount(selectedChats?._id);
+      const updatedChat = response.data;
 
-      if (response.success) {
-        allCurrentChats.map((chat) => {
+      if (response.success && updatedChat) {
+        const updatedChats = allCurrentChats.map((chat) => {
           if (chat._id === selectedChats?._id) {
-            return response.data;
+            return updatedChat;
           }
           return chat;
         });
+
+        dispatch(setAllCurrentChats(updatedChats));
+        setAllMessages((prevMsgs) =>
+          prevMsgs.map((msg) => ({ ...msg, read: true })),
+        );
       }
     } catch (error) {
       toast.error(error.message);
@@ -114,14 +126,14 @@ const ChatArea = ({ socket }) => {
   }
 
   useEffect(() => {
-    if (!selectedChats?._id) return;
+
     getMessages();
 
     if (selectedChats?.lastMessage?.sender !== user._id) {
       clearUnreadMessages();
     }
 
-    socket.on("receive-message", (message) => {
+    socket.off('receive-message').on("receive-message", (message) => {
       const selectedChats = store.getState().userReducer.selectedChats;
       if (selectedChats._id === message.chatId) {
         setAllMessages((prevMsgs) => [...prevMsgs, message]);
@@ -161,6 +173,7 @@ const ChatArea = ({ socket }) => {
     });
 
     socket.on('started-typing', data => {
+      setData(data);
       if (selectedChats._id === data.chatId && data.sender !== user._id) {
         setIsTyping(true);
         setTimeout(() => {
@@ -214,7 +227,9 @@ const ChatArea = ({ socket }) => {
               );
             })}
           </div>
-          <div className="typing-indicator">{isTyping && <i>typing...</i>}</div>
+          <div className="typing-indicator">
+            {isTyping && selectedChats?.members.map(m => m._id).includes(data.sender) && <i>typing...</i>}
+            </div>
 
           <div className="send-message-div">
             <div className="message-input-container">

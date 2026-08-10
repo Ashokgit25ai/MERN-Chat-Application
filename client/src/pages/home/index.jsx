@@ -30,7 +30,7 @@ const index = () => {
       <div className="main-content">
         <Sidebar socket={socket} onlineUsers={onlineUsers}/>
         {selectedChats && <ChatArea className="chat-area" socket={socket} />}
-      </div>
+      </div> 
     </div>
   )
 }
