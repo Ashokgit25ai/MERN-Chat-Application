@@ -75,6 +75,7 @@ const ChatArea = ({ socket }) => {
       }
     } catch (error) {
       toast.error(error.message || "Failed to load messages");
+      dispatch(hideLoader());
     }
   };
 
@@ -199,8 +200,8 @@ const ChatArea = ({ socket }) => {
                 </div>
               );
             })}
-            <div className="typing-indicator">{isTyping && <i>typing...</i>}</div>
           </div>
+          <div className="typing-indicator">{isTyping && <i>typing...</i>}</div>
 
           <div className="send-message-div">
             <div className="message-input-container">

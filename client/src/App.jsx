@@ -3,6 +3,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Home from './pages/home'
 import Login from './pages/login'
 import Signup from './pages/signup'
+import Profile from './pages/Profile/Profile'
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute'
 import Loader from './redux/components/Loader'
@@ -20,6 +21,11 @@ const App = () => {
                 <Route path='/' element={
                   <ProtectedRoute>
                     <Home />
+                  </ProtectedRoute>}>
+                </Route>
+                <Route path='/profile' element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>}>
                 </Route>
                 <Route path='/login' element={<Login />}></Route>
