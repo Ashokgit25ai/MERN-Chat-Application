@@ -37,6 +37,23 @@
 }
 
 /* Avatar */
+.user-profile-image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #6366f1;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
 .user-profile-pic {
     width: 45px;
     height: 45px;
@@ -53,6 +70,7 @@
 
     flex-shrink: 0;
 }
+
 
 /* User Details */
 .filter-user-details {

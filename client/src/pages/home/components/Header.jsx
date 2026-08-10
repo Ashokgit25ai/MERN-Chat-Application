@@ -1,9 +1,13 @@
 import React from 'react'
 import '../styles/header.css'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
   const { user } = useSelector(state => state.userReducer);
+  const navigate = useNavigate();
+
+  console.log("Profile picture:", user?.profilePic);
   const getFullName = () => {
     const firstName = user?.firstname?.toUpperCase()[0] + user?.firstname?.slice(1).toLowerCase();
     const lastName = user?.lastname?.toUpperCase()[0] + user?.lastname?.slice(1).toLowerCase();
@@ -25,7 +29,8 @@ const Header = () => {
         </div>
         <div className="app-user-profile">
             <div className="logged-user-name">{getFullName()}</div>
-            <div className="logged-user-profile-pic">{getInitials()}</div>
+            {user?.profilePic ? <img src={user?.profilePic} className="logged-user-profile-image" onClick={() => navigate('/profile')} /> :
+             <div className="logged-user-profile-pic" onClick={() => navigate('/profile')}>{getInitials()}</div>}
         </div>
     </div>
    

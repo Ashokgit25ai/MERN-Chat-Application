@@ -160,7 +160,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
   return getData().map((obj) => {
     let user = obj;
     if (obj.members) {
-      user = obj.members.find((m) => m._id !== currentUser._id);
+      user = obj.members.find((m) => m._id !== currentUser?._id);
     }
     return (
       <div

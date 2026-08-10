@@ -18,3 +18,12 @@ export const getAllUsers = async () => {
         return error;
     }
 };
+
+export const uploadProfilePicture = async (image) => {
+    try{
+        const response = await axiosInstance.post('api/user/upload-profile-picture', { image });
+        return response.data;
+    }catch(error){
+        return error;
+    }
+}
