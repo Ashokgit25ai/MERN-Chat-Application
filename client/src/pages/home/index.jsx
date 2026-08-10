@@ -17,13 +17,16 @@ const index = () => {
       socket.on('online-user', onlineUsers => {
         setOnlineUsers(onlineUsers);
       });
+      socket.on('user-offline', onlineUsers => {
+        setOnlineUsers(onlineUsers);
+      });
     }
 
   }, [user]);
 
   return (
     <div className='home-page'>
-      <Header />
+      <Header socket={socket}/>
       <div className="main-content">
         <Sidebar socket={socket} onlineUsers={onlineUsers}/>
         {selectedChats && <ChatArea className="chat-area" socket={socket} />}

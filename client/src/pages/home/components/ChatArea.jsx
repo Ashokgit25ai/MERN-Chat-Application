@@ -250,7 +250,7 @@ const ChatArea = ({ socket }) => {
                 className="fa-regular fa-face-smile send-emoji-btn"
               ></button>
               <button
-                onClick={sendMessage}
+                onClick={() => sendMessage('')}
                 className="fa fa-paper-plane send-message-btn"
               ></button>
             
