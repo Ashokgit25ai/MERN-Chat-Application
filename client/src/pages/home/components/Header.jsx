@@ -7,7 +7,6 @@ const Header = () => {
   const { user } = useSelector(state => state.userReducer);
   const navigate = useNavigate();
 
-  console.log("Profile picture:", user?.profilePic);
   const getFullName = () => {
     const firstName = user?.firstname?.toUpperCase()[0] + user?.firstname?.slice(1).toLowerCase();
     const lastName = user?.lastname?.toUpperCase()[0] + user?.lastname?.slice(1).toLowerCase();
