@@ -51,8 +51,13 @@ io.on("connection", (socket) => {
     if (!onlineUsers.includes(userId)) {
       onlineUsers.push(userId);
     }
-    socket.emit('online-user', onlineUsers)
+    io.emit('online-user', onlineUsers)
   });
+
+  socket.on('user-logout', userId => {
+    onlineUsers.splice(onlineUsers.indexOf(userId), 1);
+    io.emit('user-offline', onlineUsers);
+  })
 
 });
 

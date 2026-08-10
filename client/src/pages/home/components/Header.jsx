@@ -3,7 +3,7 @@ import '../styles/header.css'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-const Header = () => {
+const Header = ( { socket } ) => {
   const { user } = useSelector(state => state.userReducer);
   const navigate = useNavigate();
 
@@ -20,16 +20,27 @@ const Header = () => {
     return `${firstNameInitial+lastNameInitial}`
   }
 
+  const logOut = () => {
+    socket.emit('user-logout', user?._id);
+
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   return (
     <div className="app-header">
         <div className="app-logo">
             <i className="fa fa-comments" aria-hidden="true"></i>
         Convo Hub
         </div>
-        <div className="app-user-profile">
-            <div className="logged-user-name">{getFullName()}</div>
+        <div className="app-user-profile"> 
             {user?.profilePic ? <img src={user?.profilePic} className="logged-user-profile-image" onClick={() => navigate('/profile')} /> :
              <div className="logged-user-profile-pic" onClick={() => navigate('/profile')}>{getInitials()}</div>}
+            <div className="logged-user-name">{getFullName()}</div>
+            <button className="logout-btn" onClick={logOut}>
+                <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                
+            </button>
         </div>
     </div>
    
