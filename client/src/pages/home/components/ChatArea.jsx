@@ -97,9 +97,15 @@ const ChatArea = ({ socket }) => {
       const updatedChat = response.data;
 
       if (response.success && updatedChat) {
-        const updatedChats = allCurrentChats.map((chat) => {
+        // use the latest allCurrentChats from the store to avoid
+        // overwriting any recent ordering updates performed elsewhere
+        const latestAllCurrentChats = store.getState().userReducer.allCurrentChats;
+        const updatedChats = latestAllCurrentChats.map((chat) => {
           if (chat._id === selectedChats?._id) {
-            return updatedChat;
+            return {
+                ...chat,
+                unreadMessagesCount: 0,
+            };
           }
           return chat;
         });
@@ -123,6 +129,10 @@ const ChatArea = ({ socket }) => {
     reader.onloadend = async () => {
       sendMessage(reader.result)
     }
+  }
+
+  const backTOUserList = () => {
+    dispatch(setSelectedChats(null));
   }
 
   useEffect(() => {
@@ -194,9 +204,29 @@ const ChatArea = ({ socket }) => {
       {selectedChats && (
         <div className="app-chat-area">
           <div className="app-chat-area-header">
-            {selectedUser
-              ? `${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim()
-              : "Select a chat"}
+            <button className="mobile-back-btn" onClick={backTOUserList}>
+                <i className="fa-solid fa-arrow-left"></i>
+            </button>
+            {selectedUser?.profilePic ?
+            <div className="user-profile-pic">
+              <img
+                src={selectedUser?.profilePic}
+                alt="Profile Pic"
+                className="chat-user-image"
+                
+              />
+            </div> :
+            
+             (
+              <div className="user-profile-pic" >
+                {selectedUser.firstname?.at(0).toUpperCase() +
+                  selectedUser.lastname?.at(0).toUpperCase()}
+              </div>
+            )}
+              {selectedUser
+                ? `${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim()
+                : "Select a chat"}
+          
           </div>
 
           <div id="main-chat-box-container" className="main-chat-area">
