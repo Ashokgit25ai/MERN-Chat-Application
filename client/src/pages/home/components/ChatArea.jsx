@@ -11,7 +11,7 @@ import { setAllCurrentChats, setSelectedChats } from "../../../redux/userSlice";
 import EmojiPicker from 'emoji-picker-react';
 
 
-const ChatArea = ({ socket }) => {
+const ChatArea = ({ socket, onlineUsers }) => {
   const dispatch = useDispatch();
   const { selectedChats, user, allCurrentChats } = useSelector(
     (state) => state.userReducer,
@@ -69,17 +69,14 @@ const ChatArea = ({ socket }) => {
     try {
       if (!selectedChats?._id) return;
 
-      console.log("show loader")
       dispatch(showLoader());
       const response = await getAllMessages(selectedChats._id);
-      console.log("api finished", response)
       if (response.success) {
         setAllMessages(response.data);
       }else {
         toast.error(response.message)
       }
     } catch (error) {
-      console.log('error', error)
       toast.error(error.message || "Failed to load messages");
      } finally {
         dispatch(hideLoader());
@@ -133,6 +130,14 @@ const ChatArea = ({ socket }) => {
 
   const backTOUserList = () => {
     dispatch(setSelectedChats(null));
+  }
+
+  const showIsOnlineHeader = () => {
+    const isOnline = onlineUsers?.includes(selectedUser?._id)
+    if(isOnline) {
+      return 'Online';
+    }
+    return `last seen ${moment(selectedChats?.lastSeen).format('hh:mm A')}`
   }
 
   useEffect(() => {
@@ -223,9 +228,12 @@ const ChatArea = ({ socket }) => {
                   selectedUser.lastname?.at(0).toUpperCase()}
               </div>
             )}
-              {selectedUser
-                ? `${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim()
-                : "Select a chat"}
+              <div>
+                {`${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim()}
+                <div className="show-is-online">
+                  {showIsOnlineHeader()}
+                </div>
+              </div>  
           
           </div>
 
