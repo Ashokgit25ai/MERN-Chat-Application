@@ -4,6 +4,7 @@ const authRouter = require("./controllers/authController");
 const userRouter = require("./controllers/userController");
 const chatRouter = require("./controllers/chatController");
 const messageRouter = require("./controllers/messageController");
+const User = require('./models/user')
 
 //use auth controller routers
 app.use(express.json({
@@ -53,15 +54,38 @@ io.on("connection", (socket) => {
   });
 
   socket.on('user-login', userId => {
+    socket.userId = userId
     if (!onlineUsers.includes(userId)) {
       onlineUsers.push(userId);
     }
     io.emit('online-user', onlineUsers)
   });
 
-  socket.on('user-logout', userId => {
+  socket.on('user-logout', async (userId) => {
     onlineUsers.splice(onlineUsers.indexOf(userId), 1);
+    const lastSeen = new Date()
+    await User.findByIdAndUpdate({
+      lastSeen: lastSeen
+    });
     io.emit('user-offline', onlineUsers);
+  })
+
+  socket.on("disconnect", async () => {
+    const userId = socket.userId
+
+    if(userId) {
+      onlineUsers.splice(onlineUsers.indexOf(userId), 1);
+    }
+    const lastSeen = new Date();
+
+    User.findByIdAndUpdate(userId,
+      {lastSeen}
+    );
+    io.emit('user-offline', {
+        userId,
+       lastSeen,
+      onlineUsers
+    });
   })
 
 });
