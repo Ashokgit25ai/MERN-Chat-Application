@@ -133,3 +133,34 @@
     color: #8b5cf6;
     background-color: #25344d;
 }
+
+
+@media (max-width: 768px) {
+
+    .main-content {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 70px);
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 100%;
+    }
+
+    .chat-area {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* When a chat is selected */
+    .main-content.chat-selected .app-sidebar {
+        display: none;
+    }
+
+    .main-content.chat-selected .chat-area {
+        width: 100%;
+        height: 100%;
+    }
+}

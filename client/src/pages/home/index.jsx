@@ -27,7 +27,7 @@ const index = () => {
   return (
     <div className='home-page'>
       <Header socket={socket}/>
-      <div className="main-content">
+      <div className={`main-content ${selectedChats ? "chat-selected" : ""}`}>
         <Sidebar socket={socket} onlineUsers={onlineUsers}/>
         {selectedChats && <ChatArea className="chat-area" socket={socket} />}
       </div> 

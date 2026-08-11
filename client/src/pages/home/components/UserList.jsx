@@ -134,7 +134,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
         if (chat._id === message.chatId) {
           const shouldIncrement =
             selectedChats?._id !== message.chatId &&
-            message.sender !== currentUser._id;
+            message.sender !== currentUser?._id;
           return {
             ...chat,
             lastMessage: message,
