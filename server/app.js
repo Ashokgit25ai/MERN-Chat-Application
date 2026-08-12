@@ -61,32 +61,26 @@ io.on("connection", (socket) => {
     io.emit('online-user', onlineUsers)
   });
 
-  socket.on('user-logout', async (userId) => {
-    onlineUsers.splice(onlineUsers.indexOf(userId), 1);
-    const lastSeen = new Date()
-    await User.findByIdAndUpdate({
-      lastSeen: lastSeen
-    });
-    io.emit('user-offline', onlineUsers);
-  })
-
   socket.on("disconnect", async () => {
-    const userId = socket.userId
+    const userId = socket.userId;
 
-    if(userId) {
-      onlineUsers.splice(onlineUsers.indexOf(userId), 1);
+    if (userId) {
+      const index = onlineUsers.indexOf(userId);
+      if (index !== -1) {
+        onlineUsers.splice(index, 1);
+      }
     }
     const lastSeen = new Date();
 
-    User.findByIdAndUpdate(userId,
-      {lastSeen}
-    );
+    if (userId) {
+      User.findByIdAndUpdate(userId, { lastSeen });
+    }
     io.emit('user-offline', {
-        userId,
-       lastSeen,
-      onlineUsers
+      userId,
+      lastSeen,
+      onlineUsers,
     });
-  })
+  });
 
 });
 

@@ -133,12 +133,15 @@ const ChatArea = ({ socket, onlineUsers }) => {
   }
 
   const showIsOnlineHeader = () => {
-    const isOnline = onlineUsers?.includes(selectedUser?._id)
-    if(isOnline) {
+    const isOnline = onlineUsers?.includes(selectedUser?._id);
+    if (isOnline) {
       return 'Online';
     }
-    return `last seen ${moment(selectedChats?.lastSeen).format('hh:mm A')}`
-  }
+    if (selectedUser?.lastSeen) {
+      return `last seen ${moment(selectedUser.lastSeen).format('hh:mm A')}`;
+    }
+    return 'Offline';
+  };
 
   useEffect(() => {
 

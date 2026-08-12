@@ -174,12 +174,12 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
                 src={user.profilePic}
                 alt="Profile Pic"
                 className="user-profile-image"
-                style={onlineUsers.includes(user._id) ? {border: '#22c55e 3px solid'} : {}}
+                style={onlineUsers?.includes(user?._id) ? {border: '#22c55e 3px solid'} : {}}
               />
             </div>
           )}
           {!user.profilePic && (
-            <div className="user-profile-pic" style={onlineUsers.includes(user._id) ? {border: '#22c55e 3px solid'} : {}} >
+            <div className="user-profile-pic" style={onlineUsers?.includes(user?._id) ? {border: '#22c55e 3px solid'} : {}} >
               {user.firstname?.at(0).toUpperCase() +
                 user.lastname?.at(0).toUpperCase()}
             </div>
