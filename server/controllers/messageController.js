@@ -24,7 +24,7 @@ router.post("/new-message", authMiddleware, async (req , res) => {
                 $set: {lastMessage: savedMessage._id},
                 $inc: {unreadMessagesCount: 1}
             }, 
-            {new: true});
+            {returnDocument: 'after'});
 
             if (!currentChat){
                 return res.status(404).send({
@@ -50,12 +50,20 @@ router.post("/new-message", authMiddleware, async (req , res) => {
 router.get("/get-all-messages/:chatId", authMiddleware, async (req , res) => {
     try{
         const chatId = req.params.chatId
-        const allMessages = await Message.find({chatId:chatId})
-                                      .sort({createdAt: 1});
-        res.status(201).send({
+        
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 30;
+        
+        const skip = (page - 1) * limit;
+
+        const allMessages = await Message.find({chatId})
+                                      .sort({createdAt: -1})
+                                      .skip(skip)
+                                      .limit(limit);
+        res.status(200).send({
             message: "Messages fetches succesfully!",
             success: true,
-            data: allMessages
+            data: allMessages.reverse()
         });
 
     }catch(error){

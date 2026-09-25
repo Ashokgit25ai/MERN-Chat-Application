@@ -1,11 +1,15 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const authRouter = require("./controllers/authController");
 const userRouter = require("./controllers/userController");
 const chatRouter = require("./controllers/chatController");
 const messageRouter = require("./controllers/messageController");
-const User = require('./models/user')
+const User = require('./models/user');
 
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
 //use auth controller routers
 app.use(express.json({
   limit: "50mb"
@@ -73,7 +77,7 @@ io.on("connection", (socket) => {
     const lastSeen = new Date();
 
     if (userId) {
-      User.findByIdAndUpdate(userId, { lastSeen });
+      await User.findByIdAndUpdate(userId, { lastSeen });
     }
     io.emit('user-offline', {
       userId,

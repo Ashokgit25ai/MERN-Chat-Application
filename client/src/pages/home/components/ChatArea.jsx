@@ -45,8 +45,9 @@ const ChatArea = ({ socket, onlineUsers }) => {
         createdAt: new Date().toISOString(),
       });
       await createNewMessage(newMessage);
-      setMessage("");
       setShowEmojiPicker(false);
+      setMessage("");
+ 
     } catch (error) {
       toast.error(error.message || "Failed to send message");
     }
@@ -190,7 +191,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
         }
     });
 
-    socket.on('started-typing', data => {
+    socket.off("started-typing").on('started-typing', data => {
       setData(data);
       if (selectedChats._id === data.chatId && data.sender !== user._id) {
         setIsTyping(true);
@@ -215,22 +216,25 @@ const ChatArea = ({ socket, onlineUsers }) => {
             <button className="mobile-back-btn" onClick={backTOUserList}>
                 <i className="fa-solid fa-arrow-left"></i>
             </button>
-            {selectedUser?.profilePic ?
-            <div className="user-profile-pic">
-              <img
-                src={selectedUser?.profilePic}
-                alt="Profile Pic"
-                className="chat-user-image"
-                
-              />
-            </div> :
-            
-             (
-              <div className="user-profile-pic" >
-                {selectedUser.firstname?.at(0).toUpperCase() +
-                  selectedUser.lastname?.at(0).toUpperCase()}
-              </div>
-            )}
+            <div className="chat-profile">            
+              {selectedUser?.profilePic ?
+              <div className="user-profile-pic">
+                <img
+                  src={selectedUser?.profilePic}
+                  alt="Profile Pic"
+                  className="chat-user-image"
+                  
+                />
+              </div> :
+              
+              (
+                <div className="user-profile-pic" >
+                  {selectedUser.firstname?.at(0).toUpperCase() +
+                    selectedUser.lastname?.at(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+
               <div>
                 {`${selectedUser.firstname || ""} ${selectedUser.lastname || ""}`.trim()}
                 <div className="show-is-online">
