@@ -21,7 +21,7 @@ const Header = ( { socket } ) => {
   }
 
   const logOut = () => {
-    socket.emit('user-logout', user?._id);
+    socket.disconnect();
 
     localStorage.removeItem('token');
     navigate('/login');

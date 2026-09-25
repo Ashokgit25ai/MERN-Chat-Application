@@ -31,8 +31,9 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
         dispatch(setSelectedChats(newChat));
       }
     } catch (error) {
-      toast.error(response.message);
       dispatch(hideLoader());
+      toast.error(error.message || 'Something went wrong');
+      
     }
   };
 
@@ -152,7 +153,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
 
       dispatch(setAllCurrentChats(allCurrentChats));
     });
-  }, [currentUser?._id]);
+  }, [currentUser?._id, dispatch]);
 
   return getData().map((obj) => {
     let user = obj;
@@ -202,7 +203,9 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
             <div className="user-start-chat">
               <button
                 className="user-start-chat-btn"
-                onClick={() => startNewChat(user._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  startNewChat(user._id)}}
               >
                 Start Chat
               </button>

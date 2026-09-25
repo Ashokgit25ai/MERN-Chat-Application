@@ -13,8 +13,8 @@ db.on('connected', ()=>{
     console.log("DB Connection is Successful!");
 });
 
-db.on('err', ()=>{
-    console.log('DB Connection Failed!');
+db.on('error', (error)=>{
+    console.log('DB Connection Failed!', error);
 });
 
 module.exports = db;

@@ -12,7 +12,7 @@
 }
 
 .app-chat-area-header {
-    height: 60px;
+    height: 65px;
     display: flex;
     align-items: center;
     padding: 0 25px;
@@ -72,6 +72,15 @@
     .mobile-back-btn:active {
         transform: scale(0.9);
     }
+}
+
+.show-is-online {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: #4FC3F7;
+    font-weight: 500;
 }
 
 .main-chat-area {
