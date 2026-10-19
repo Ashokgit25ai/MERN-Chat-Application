@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './profile.css'
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 const Profile = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.userReducer);
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(user?.profilePic || '');
 
     const getInitials = () => {
         const firstNameInitial = user?.firstname.toUpperCase()[0];
@@ -55,16 +55,11 @@ const Profile = () => {
             toast.error(response.message);
         }
     }catch{
-        toast.error(error.message);
+        toast.error("Failed to upload profile picture");
         dispatch(hideLoader());
     }
   };
 
-  useEffect(() => {
-    if(user?.profilePic) {
-        setImage(user.profilePic)
-    }
-  }, [user]);
 
 
   return (

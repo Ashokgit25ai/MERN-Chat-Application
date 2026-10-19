@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/chatArea.css";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
@@ -13,7 +13,7 @@ import EmojiPicker from 'emoji-picker-react';
 
 const ChatArea = ({ socket, onlineUsers }) => {
   const dispatch = useDispatch();
-  const { selectedChats, user, allCurrentChats } = useSelector(
+  const { selectedChats, user } = useSelector(
     (state) => state.userReducer,
   );
   const selectedUser = selectedChats?.members?.find(
@@ -145,11 +145,17 @@ const ChatArea = ({ socket, onlineUsers }) => {
   };
 
   useEffect(() => {
+    const loadMessages = async () => {
+      await getMessages();
+    };
 
-    getMessages();
+    loadMessages();
+    
 
     if (selectedChats?.lastMessage?.sender !== user._id) {
-      clearUnreadMessages();
+      setTimeout(() => {
+    clearUnreadMessages();
+  }, 0);
     }
 
     socket.off('receive-message').on("receive-message", (message) => {
@@ -159,7 +165,9 @@ const ChatArea = ({ socket, onlineUsers }) => {
       }
 
       if (selectedChats._id === message.chatId && message.sender !== user._id) {
-        clearUnreadMessages();
+        setTimeout(() => {
+          clearUnreadMessages();
+        }, 0);
       }
     });
 
@@ -201,7 +209,13 @@ const ChatArea = ({ socket, onlineUsers }) => {
       }
     })
 
-  }, [selectedChats]);
+  }, [selectedChats,
+        clearUnreadMessages,
+        dispatch,
+        getMessages,
+        socket,
+        user?._id
+      ]);
 
   useEffect(() => {
     const msgBoxContainer = document.getElementById("main-chat-box-container");
@@ -306,7 +320,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
                 />
               </label>
               <button
-                onClick={(e) => setShowEmojiPicker(!showEmojiPicker)}
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className="fa-regular fa-face-smile send-emoji-btn"
               ></button>
               <button

@@ -1,4 +1,3 @@
-import React from 'react';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { signupUser } from '../apiCalls/auth';
@@ -6,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '../../redux/loaderSlice';
 
-const index = () => {
+const Index = () => {
 
   const dispatch = useDispatch();
 
@@ -31,7 +30,7 @@ const index = () => {
       }else{
         return toast.error(response.message);
       }
-    }catch(error){
+    }catch {
       dispatch(hideLoader());
       return toast.error(response.message);
 
@@ -72,4 +71,4 @@ const index = () => {
   )
 };
 
-export default index;
+export default Index;

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "../styles/userList.css";
 import { useSelector } from "react-redux";
-import { clearUnreadMessageCount, createNewChat } from "../../apiCalls/chat";
+import { createNewChat } from "../../apiCalls/chat";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import store from "./../../../redux/store";
@@ -153,7 +153,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
 
       dispatch(setAllCurrentChats(allCurrentChats));
     });
-  }, [currentUser?._id, dispatch]);
+  }, [currentUser?._id, dispatch, socket]);
 
   return getData().map((obj) => {
     let user = obj;
