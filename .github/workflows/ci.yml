@@ -14,7 +14,8 @@ on:
 jobs:
   client:   
     name: Client CI
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
+
 
     
     defaults:
