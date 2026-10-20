@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/chatArea.css";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
@@ -16,6 +16,10 @@ const ChatArea = ({ socket, onlineUsers }) => {
   const { selectedChats, user } = useSelector(
     (state) => state.userReducer,
   );
+  const selectedChatId = selectedChats?._id;
+  const selectedChatMemberIds =
+    selectedChats?.members?.map((member) => member._id) ?? [];
+  const selectedChatMemberIdsKey = selectedChatMemberIds.join(",");
   const selectedUser = selectedChats?.members?.find(
     (u) => u?._id && u._id !== user?._id,
   );
@@ -24,6 +28,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [data, setData] = useState(null);
+  const messageInputRef = useRef(null);
 
   const sendMessage = async (image) => {
     try {
@@ -47,9 +52,43 @@ const ChatArea = ({ socket, onlineUsers }) => {
       await createNewMessage(newMessage);
       setShowEmojiPicker(false);
       setMessage("");
+
+      if(messageInputRef.current) {
+        messageInputRef.current.style.height = "48px";
+      }
  
     } catch (error) {
       toast.error(error.message || "Failed to send message");
+    }
+  };
+
+  const handleMessageChange = (e) => {
+
+    setMessage(e.target.value);
+
+    // Reset height
+    e.target.style.height = "48px";
+
+    // Grow with content, maximum 120px
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+
+    // Show scrollbar only after 120px
+    e.target.style.overflowY =
+      e.target.scrollHeight > 120 ? "auto" : "hidden";
+
+    socket.emit("user-typing", {
+                    chatId: selectedChats._id,
+                    members: selectedChats.members.map(m => m._id),
+                    sender: user._id
+                  }
+                );
+  }
+
+
+  const handleMessageKeyDown = (e) => {
+    if(e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage("");
     }
   };
 
@@ -66,12 +105,12 @@ const ChatArea = ({ socket, onlineUsers }) => {
     }
   };
 
-  const getMessages = async () => {
+  const getMessages = useCallback(async () => {
     try {
-      if (!selectedChats?._id) return;
+      if (!selectedChatId) return;
 
       dispatch(showLoader());
-      const response = await getAllMessages(selectedChats._id);
+      const response = await getAllMessages(selectedChatId);
       if (response.success) {
         setAllMessages(response.data);
       }else {
@@ -82,16 +121,18 @@ const ChatArea = ({ socket, onlineUsers }) => {
      } finally {
         dispatch(hideLoader());
     }
-  };
+  }, [dispatch, selectedChatId]);
 
-  const clearUnreadMessages = async () => {
+  const clearUnreadMessages = useCallback(async () => {
+    if (!selectedChatId) return;
+
     try {
       socket.emit("clear-unread-messages", {
-        chatId: selectedChats._id,
-        members: selectedChats.members.map((m) => m._id),
+        chatId: selectedChatId,
+        members: selectedChatMemberIds,
       });
 
-      const response = await clearUnreadMessageCount(selectedChats?._id);
+      const response = await clearUnreadMessageCount(selectedChatId);
       const updatedChat = response.data;
 
       if (response.success && updatedChat) {
@@ -99,7 +140,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
         // overwriting any recent ordering updates performed elsewhere
         const latestAllCurrentChats = store.getState().userReducer.allCurrentChats;
         const updatedChats = latestAllCurrentChats.map((chat) => {
-          if (chat._id === selectedChats?._id) {
+          if (chat._id === selectedChatId) {
             return {
                 ...chat,
                 unreadMessagesCount: 0,
@@ -116,7 +157,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [dispatch, selectedChatId, selectedChatMemberIdsKey, socket]);
 
   const sendImage = (e) => {
     const file = e.target.files[0];
@@ -130,6 +171,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
   }
 
   const backTOUserList = () => {
+    sessionStorage.removeItem("selectedChatId");
     dispatch(setSelectedChats(null));
   }
 
@@ -145,26 +187,22 @@ const ChatArea = ({ socket, onlineUsers }) => {
   };
 
   useEffect(() => {
-    const loadMessages = async () => {
-      await getMessages();
-    };
+    getMessages();
 
-    loadMessages();
-    
-
-    if (selectedChats?.lastMessage?.sender !== user._id) {
-      setTimeout(() => {
-    clearUnreadMessages();
-  }, 0);
+    if (
+      selectedChats?.lastMessage &&
+      selectedChats.lastMessage.sender !== user?._id
+    ) {
+      clearUnreadMessages();
     }
 
     socket.off('receive-message').on("receive-message", (message) => {
       const selectedChats = store.getState().userReducer.selectedChats;
-      if (selectedChats._id === message.chatId) {
+      if (selectedChats?._id === message.chatId) {
         setAllMessages((prevMsgs) => [...prevMsgs, message]);
       }
 
-      if (selectedChats._id === message.chatId && message.sender !== user._id) {
+      if (selectedChats?._id === message.chatId && message.sender !== user._id) {
         setTimeout(() => {
           clearUnreadMessages();
         }, 0);
@@ -177,7 +215,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
         const allCurrentChats = store.getState().userReducer.allCurrentChats;
         const selectedChats = store.getState().userReducer.selectedChats;
 
-        if (selectedChats._id === data.chatId) {
+        if (selectedChats?._id === data.chatId) {
           //Updating the unread msg count
           const updatedChats = allCurrentChats.map((chat) => {
             if (chat._id === data.chatId) {
@@ -201,7 +239,7 @@ const ChatArea = ({ socket, onlineUsers }) => {
 
     socket.off("started-typing").on('started-typing', data => {
       setData(data);
-      if (selectedChats._id === data.chatId && data.sender !== user._id) {
+      if (selectedChatId === data.chatId && data.sender !== user._id) {
         setIsTyping(true);
         setTimeout(() => {
           setIsTyping(false);
@@ -209,17 +247,13 @@ const ChatArea = ({ socket, onlineUsers }) => {
       }
     })
 
-  }, [selectedChats,
-        clearUnreadMessages,
-        dispatch,
-        getMessages,
-        socket,
-        user?._id
-      ]);
+  }, [selectedChatId, clearUnreadMessages, dispatch, getMessages, socket, user?._id]);
 
   useEffect(() => {
     const msgBoxContainer = document.getElementById("main-chat-box-container");
-    msgBoxContainer.scrollTop = msgBoxContainer.scrollHeight;
+    if (msgBoxContainer) {
+      msgBoxContainer.scrollTop = msgBoxContainer.scrollHeight;
+    }
   }, [allMessages, isTyping]);
 
   return (
@@ -296,19 +330,14 @@ const ChatArea = ({ socket, onlineUsers }) => {
               <div className="emoji-picker" style={{width:'100%', display:'flex', padding:'0px, 20px', justifyContent:'right', marginTop:'-20px' }}>
                 {showEmojiPicker && <EmojiPicker style={{width:'300px', height:'30px'}} onEmojiClick={(e) => setMessage((prev) => prev + e.emoji)} />}
               </div>
-              <input
-                type="text"
+              <textarea
+                ref={messageInputRef}
                 className="send-message-input"
                 placeholder="Type a message"
                 value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  socket.emit("user-typing", {
-                    chatId: selectedChats._id,
-                    members: selectedChats.members.map(m => m._id),
-                    sender: user._id
-                  });
-                }}
+                rows={1}
+                onChange={handleMessageChange}
+                onKeyDown={handleMessageKeyDown}
               />
               <label htmlFor="file">
                 <i className="fa-regular fa-image send-image-btn"></i>
