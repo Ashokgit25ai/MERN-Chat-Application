@@ -104,25 +104,57 @@
 /* ===========================
    Message Input
 =========================== */
-
 .send-message-input {
-    width: 100%;
-    height: 48px;
-    padding: 0 85px 0 18px;
+    width: 99%;
+    min-height: 48px;
+    max-height: 120px;
+
+    padding: 13px 135px 13px 18px;
+
     background-color: #0f172a;
     color: #ffffff;
+
     border: 1px solid #334155;
-    border-radius: 30px;
+    border-radius: 24px;
+
     outline: none;
+    resize: none;
+
+    overflow-y: hidden;
+    font-family: inherit;
     font-size: 15px;
-    transition: border-color 0.5s ease;
+    line-height: 20px;
+
+    box-sizing: border-box;
+
+    transition: border-color 0.2s ease;
+
+    scrollbar-width: thin;
+    scrollbar-color: #6366f1 transparent;
+}
+
+
+.send-message-input::-webkit-scrollbar {
+    width: 5px;
+}
+
+.send-message-input::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.send-message-input::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 10px;
+}
+
+.send-message-input::-webkit-scrollbar-thumb:hover {
+    background: #8b5cf6;
 }
 
 .send-emoji-btn {
     position: absolute;
     right: 48px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom:14px;
 
     border: none;
     background: transparent;
@@ -158,15 +190,11 @@
     border-color: #6366f1;
 }
 
-/* ===========================
-   Send Button
-=========================== */
 
 .send-message-btn {
     position:absolute;
     right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 14px;
     border: none;
     background: transparent;
     color: #94a3b8;
@@ -181,8 +209,7 @@
 .send-image-btn {
     position: absolute;
     right: 80px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 14px;
 
     color: #94a3b8;
     font-size: 18px;
@@ -194,9 +221,7 @@
 .send-image-btn:hover {
     color: #6366f1;
 }
-/* ===========================
-   Message Container
-=========================== */
+
 
 .message-container {
     display: flex;
@@ -204,9 +229,7 @@
     margin: 10px 0;
 }
 
-/* ===========================
-   Sent Message
-=========================== */
+
 
 .send-message {
     margin-left: auto;
