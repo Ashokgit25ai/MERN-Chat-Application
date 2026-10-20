@@ -1,7 +1,11 @@
 const ollama = require("ollama").default;
 const router = require("express").Router();
 
-router.post("/chat", async (req, res) => {
+const authMiddleware = require("../middlewares/authMiddleware");
+const AIConversation = require("../models/aiConveresation");
+
+
+router.post("/chat", authMiddleware, async (req, res) => {
     try{
         const { message } = req.body;
 

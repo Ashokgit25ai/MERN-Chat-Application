@@ -5,3 +5,7 @@ server/.env
 .env
 
 *.log
+
+# AI-related files
+server/controllers/aiController.js
+server/models/aiConveresation.js
