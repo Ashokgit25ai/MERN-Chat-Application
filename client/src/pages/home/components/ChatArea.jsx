@@ -187,8 +187,12 @@ const ChatArea = ({ socket, onlineUsers }) => {
   };
 
   useEffect(() => {
-    getMessages();
+    const loadMessages = async () => {
+      await getMessages();
+    };
 
+    loadMessages();
+    
     if (
       selectedChats?.lastMessage &&
       selectedChats.lastMessage.sender !== user?._id
