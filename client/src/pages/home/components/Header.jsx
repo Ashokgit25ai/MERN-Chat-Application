@@ -23,6 +23,7 @@ const Header = ( { socket } ) => {
     socket.disconnect();
 
     localStorage.removeItem('token');
+    sessionStorage.removeItem('selectedChatId');
     navigate('/login');
   }
 
