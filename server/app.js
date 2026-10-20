@@ -8,8 +8,10 @@ const messageRouter = require("./controllers/messageController");
 const aiRouter = require("./controllers/aiController");
 const User = require('./models/user');
 
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: allowedOrigins
 }))
 //use auth controller routers
 app.use(express.json({
@@ -20,7 +22,7 @@ const server = require("http").createServer(app);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
   },
 });
