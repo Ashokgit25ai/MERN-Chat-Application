@@ -6,7 +6,7 @@ import { io } from 'socket.io-client'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSelectedChats } from '../../redux/userSlice'
 
-const socket = io('http://localhost:3300')
+const socket = io()
 const Index = () => {
   const dispatch = useDispatch();
   const { selectedChats, user } = useSelector(state => state.userReducer);
