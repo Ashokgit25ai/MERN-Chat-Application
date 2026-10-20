@@ -5,7 +5,12 @@ import { getAllChats } from "../pages/apiCalls/chat";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../redux/loaderSlice";
 import toast from "react-hot-toast";
-import { setUser, setAllUsers, setAllCurrentChats } from "../redux/userSlice";
+import {
+  setUser,
+  setAllUsers,
+  setAllCurrentChats,
+  setSelectedChats,
+} from "../redux/userSlice";
 
 const ProtectedRoute = ({ children }) => {
 
@@ -63,6 +68,16 @@ const ProtectedRoute = ({ children }) => {
 
       if(response.success){
         dispatch(setAllCurrentChats(response.data));
+        const selectedChatId = sessionStorage.getItem("selectedChatId");
+        const selectedChat = response.data.find(
+          (chat) => chat._id === selectedChatId,
+        );
+
+        if (selectedChat) {
+          dispatch(setSelectedChats(selectedChat));
+        } else if (selectedChatId) {
+          sessionStorage.removeItem("selectedChatId");
+        }
       }else{
         toast.error(response.message);
         window.location.href = '/login'
