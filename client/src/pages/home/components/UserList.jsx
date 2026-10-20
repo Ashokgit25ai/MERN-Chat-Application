@@ -28,6 +28,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
         const newChat = response.data;
         const updatedChat = [...allCurrentChats, newChat];
         dispatch(setAllCurrentChats(updatedChat));
+        sessionStorage.setItem("selectedChatId", newChat._id);
         dispatch(setSelectedChats(newChat));
       }
     } catch (error) {
@@ -45,6 +46,7 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
     );
 
     if (chat) {
+      sessionStorage.setItem("selectedChatId", chat._id);
       dispatch(setSelectedChats(chat));
     }
   };
@@ -64,9 +66,14 @@ const UserList = ({ searchKey, socket, onlineUsers }) => {
     if (!chat || !chat?.lastMessage) {
       return "";
     } else {
+      const senderId =
+        chat.lastMessage.sender?._id ?? chat.lastMessage.sender;
       const prefix =
-        chat?.lastMessage?.sender === currentUser._id ? "You: " : "";
-      return `${prefix} ${chat?.lastMessage?.text?.substring(0, 25)}`;
+        String(senderId) === String(currentUser?._id) ? "You: " : "";
+      if (chat.lastMessage.image) {
+        return `${prefix}Image`;
+      }
+      return `${prefix} ${chat?.lastMessage?.text || ""}`;
     }
   };
 
