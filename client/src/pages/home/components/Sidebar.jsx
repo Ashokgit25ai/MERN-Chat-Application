@@ -1,4 +1,4 @@
-import React, { useState }  from 'react'
+import { useState }  from 'react'
 import '../styles/sideBar.css'
 import Search from './Search'
 import UserList from './UserList';

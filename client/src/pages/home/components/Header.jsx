@@ -1,4 +1,3 @@
-import React from 'react'
 import '../styles/header.css'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -24,6 +23,7 @@ const Header = ( { socket } ) => {
     socket.disconnect();
 
     localStorage.removeItem('token');
+    sessionStorage.removeItem('selectedChatId');
     navigate('/login');
   }
 

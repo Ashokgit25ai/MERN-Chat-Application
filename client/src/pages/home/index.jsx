@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import ChatArea from './components/ChatArea'
@@ -6,8 +6,8 @@ import { io } from 'socket.io-client'
 import { useSelector, useDispatch } from 'react-redux'
 import { setSelectedChats } from '../../redux/userSlice'
 
-const socket = io('http://localhost:3300')
-const index = () => {
+const socket = io()
+const Index = () => {
   const dispatch = useDispatch();
   const { selectedChats, user } = useSelector(state => state.userReducer);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -61,4 +61,4 @@ const index = () => {
   )
 }
 
-export default index;
+export default Index;

@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { loginUser } from '../apiCalls/auth';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '../../redux/loaderSlice';
 
-const index = () => {
+const Index = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState({
     email:'',
     password:''
   });
 
-  const onLoginFormSubmit = async (event) =>{
+  const onLoginFormSubmit = async (event) => {
     event.preventDefault();
-    let response = null;
-    try{
+
+    try {
       dispatch(showLoader());
-      response = await loginUser(user);
+      const response = await loginUser(user);
       dispatch(hideLoader());
 
-      if (response.success){
+      if (response?.success) {
         toast.success(response.message);
         localStorage.setItem('token', response.token);
         window.location.href = '/';
-      }else{
-        return toast.error(response.message);
+      } else {
+        toast.error(response?.message || 'Login failed');
       }
-    }catch(error){
+    } catch (error) {
       dispatch(hideLoader());
-      return toast.error(response.message);
+      toast.error(error?.response?.data?.message || 'Something went wrong');
     }
   };
 
@@ -41,8 +41,8 @@ const index = () => {
         <div className="card-title">
           <h1>Login Here</h1>
         </div>
-        <div className="form" onSubmit={onLoginFormSubmit}>
-          <form>
+        <div className="form">
+          <form onSubmit={onLoginFormSubmit}>
             <input type="email" placeholder='Email' value={user.email} 
               onChange={(e) => setUser({...user, email: e.target.value})} />
             <input type="password" placeholder='password' value={user.password} 
@@ -60,4 +60,4 @@ const index = () => {
   )
 }
 
-export default index;
+export default Index;

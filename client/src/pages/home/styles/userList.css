@@ -42,6 +42,15 @@
     border-color: #6366f1;
 }
 
+.filtered-user,
+.selected-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
+}
+
 /* Avatar */
 .user-profile-image {
     width: 45px;
@@ -77,10 +86,20 @@
     flex-shrink: 0;
 }
 
+.user-profile-pic,
+.user-profile-image {
+    width: 45px;
+    height: 45px;
+    flex: 0 0 45px;
+    border-radius: 50%;
+}
+
 
 /* User Details */
 .filter-user-details {
-    flex: 1;
+    flex: 1 1 0%;
+    width: 0;
+    overflow: hidden;
     min-width: 0;
 }
 
@@ -89,11 +108,19 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-display-email {
     color: #b0b8d1;
     font-size: 12px;
+
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-display-name,
@@ -106,8 +133,9 @@
 .read-time {
     display: flex;
     flex-direction: column;
-    align-items: end;
+    align-items: flex-end;
     justify-content: flex-start;
+    flex: 0 0 auto;
     min-width: 45px;
     gap: 8px;
 }
