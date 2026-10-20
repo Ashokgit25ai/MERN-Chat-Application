@@ -192,12 +192,15 @@ const ChatArea = ({ socket, onlineUsers }) => {
     };
 
     loadMessages();
-    
+
     if (
       selectedChats?.lastMessage &&
       selectedChats.lastMessage.sender !== user?._id
     ) {
-      clearUnreadMessages();
+      setTimeout(() => {
+        clearUnreadMessages();
+      }, 0);
+
     }
 
     socket.off('receive-message').on("receive-message", (message) => {
