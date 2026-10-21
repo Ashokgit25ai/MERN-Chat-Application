@@ -3,6 +3,13 @@ const User = require("../models/user");
 const authMiddleware = require("../middlewares/authMiddleware");
 const cloudinary = require('../cloudinary');
 
+const https = require('https');
+
+const cloudinaryAgent = new https.Agent({
+    keepAlive: true,
+    family: 4
+});
+
 router.get("/get-logged-user" , authMiddleware , async (req,res) => {
     try{
         const user = await User.findOne({_id: req.userId});
@@ -44,8 +51,20 @@ router.post('/upload-profile-picture', authMiddleware, async (req, res) => {
     try{
         const image = req.body.image;
 
+        if (typeof image !== 'string' || !image.startsWith('data:image/')) {
+            return res.status(400).send({
+                message: 'Please select a valid image to upload',
+                success: false
+            });
+        }
+
+
         const uploadedImage = await cloudinary.uploader.upload(image, {
-            folder: 'convo-hub'
+            folder: 'convo-hub',
+            public_id: String(req.userId),
+            overwrite: true,
+            agent: cloudinaryAgent,
+            timeout: 20000
         });
 
         const user = await User.findByIdAndUpdate(
@@ -62,10 +81,11 @@ router.post('/upload-profile-picture', authMiddleware, async (req, res) => {
 
 
     }catch(error){
-        res.send({
-            message: error.message,
+            console.error("Profile picture upload failed:", error);
+        res.status(500).send({
+            message: 'Profile picture upload failed.',
             success: false
-        })
+        });
     }
 })
 

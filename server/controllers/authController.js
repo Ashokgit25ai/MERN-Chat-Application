@@ -68,8 +68,9 @@ router.post("/login", async (req,res) => {
         })
 
     }catch(error){
-        res.send({
-            message: error.message,
+        console.error("Login failed:", error.message);
+        res.status(500).send({
+            message: "Unable to log in right now. Check the server logs for details.",
             success: false
         })
     }
