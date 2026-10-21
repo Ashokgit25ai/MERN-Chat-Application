@@ -11,7 +11,9 @@ import toast from 'react-hot-toast';
 const Profile = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.userReducer);
-    const [image, setImage] = useState(user?.profilePic || '');
+    const [newImage, setNewImage] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+    const image = newImage || user?.profilePic || '';
 
     const getInitials = () => {
         const firstNameInitial = user?.firstname.toUpperCase()[0];
@@ -32,30 +34,45 @@ const Profile = () => {
 
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+    }
+
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
 
     reader.onloadend = () => {
-        setImage(reader.result);
+        if (typeof reader.result === 'string') {
+            setNewImage(reader.result);
+        }
     }
   }
 
   const uploadPicture = async () => {
+    if (!newImage) {
+        toast.error('Please select a picture to upload');
+        return;
+    }
+
     try{
+        setIsUploading(true);
         dispatch(showLoader());
-        const response = await uploadProfilePicture(image)
-        dispatch(hideLoader());
+        const response = await uploadProfilePicture(newImage)
 
         if (response.success) {
             toast.success(response.message);
             dispatch(setUser(response.data));
+            setNewImage('');
         }
         else{
             toast.error(response.message);
         }
-    }catch{
-        toast.error("Failed to upload profile picture");
+    }catch(error){
+        toast.error(error.response?.data?.message || error.message || "Failed to upload profile picture");
+    }finally{
+        setIsUploading(false);
         dispatch(hideLoader());
     }
   };
@@ -73,8 +90,10 @@ const Profile = () => {
                     <div className='profile-pic-content'>
                         <p>Upload Profile Picture</p>
                         <div className="select-profile-picture-container">
-                            <input type="file" id="select-image" onChange={onFileSelect}/>
-                            <button className='upload-picture-btn' onClick={uploadPicture}>Upload</button>
+                            <input type="file" id="select-image" accept="image/*" onChange={onFileSelect} disabled={isUploading}/>
+                            <button className='upload-picture-btn' onClick={uploadPicture} disabled={isUploading}>
+                                {isUploading ? 'Uploading...' : 'Upload'}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -106,4 +125,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
