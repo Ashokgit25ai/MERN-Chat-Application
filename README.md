@@ -1,31 +1,75 @@
 MERN Chat Application
-A full-stack real-time chat application built with the MERN stack.
 
-The application supports authentication, one-to-one messaging, real-time communication with Socket.IO, online/offline status, typing indicators, unread message counts, image sharing, profile pictures, user search, and message pagination.
+MERN Chat Application is a full-stack real-time messaging application developed using the MERN stack: MongoDB, Express.js, React.js, and Node.js. The main purpose of the project is to provide users with a simple platform where they can register, log in, find other users, start private conversations, and exchange messages in real time.
+Project Overview
+The application provides user authentication, private one-to-one conversations, real-time messaging, online/offline presence, typing indicators, unread message counts, image sharing, profile picture management, user search, and message pagination.
 
-The application is containerized with Docker and deployed on AWS EC2 using Docker Hub and GitHub Actions.
-Live Demo
-- Frontend: http://65.0.7.77
-- Backend API: http://3.7.240.240:5000
-The EC2 public IP addresses may change if the instances are replaced or the frontend instance is not assigned an Elastic IP.
+The frontend is built with React.js and provides the user interface for authentication, user search, chat management, messaging, profile management, and real-time updates.
 
-Features
-- User registration and login
-- JWT-based authentication
-- Password hashing with bcrypt
+The backend is built with Node.js and Express.js. It provides REST APIs for authentication, users, chats, and messages. Socket.IO is used alongside the REST APIs to handle real-time communication between users.
+
+MongoDB Atlas is used as the database for storing user, chat, and message information. Cloudinary is used for storing profile pictures and images shared through conversations.
+Main Features
+User Authentication
+Users can create an account and log in securely.
+
+The application uses:
+- JWT for authentication
+- bcrypt for password hashing
 - Protected API routes
-- One-to-one conversations
-- Real-time messaging with Socket.IO
-- Online/offline status and last seen
-- Typing indicators
-- Unread message counts
-- Image sharing
-- Profile picture upload with Cloudinary
-- User search
-- Message pagination
+- Authentication middleware
+- Persistent login using JWT
+One-to-One Messaging
+Users can search for registered users and start private conversations.
 
-Tech Stack
+Each conversation maintains:
+- Chat members
+- Previous messages
+- Latest message
+- Message timestamp
+- Unread message count
+Real-Time Messaging
+Socket.IO provides real-time communication between users.
+
+When a user sends a message, the other user can receive it immediately without refreshing the page.
+
+Real-time functionality is also used for:
+- New message notifications
+- Typing indicators
+- Online/offline status
+- Unread message updates
+- Clearing unread message counts
+Online and Offline Status
+The application tracks whether users are currently online.
+
+When a user disconnects, the application updates their last-seen information.
+
+This allows users to see:
+- Online status
+- Offline status
+- Last seen information
+Typing Indicator
+When a user is typing inside a conversation, the other participant receives a real-time typing notification through Socket.IO.
+Unread Messages
+The application keeps track of unread messages for conversations.
+
+Unread counts are updated in real time and are cleared when the conversation is opened.
+Profile Pictures and Image Sharing
+Users can upload profile pictures.
+
+Images can also be shared inside conversations.
+
+Cloudinary is integrated as the external image storage service, while the resulting image URLs are stored with the relevant application data.
+User Search
+Users can search for registered users and start a conversation directly from the user list.
+Message Pagination
+Messages are loaded in pages instead of retrieving the complete conversation history at once.
+
+This helps reduce the amount of data loaded when a conversation contains a large number of messages.
 Frontend
+The frontend is developed using React.js with Vite.
+
+The main technologies used are:
 - React.js
 - Vite
 - Redux Toolkit
@@ -34,273 +78,198 @@ Frontend
 - Socket.IO Client
 - HTML5
 - CSS3
+React is responsible for the user interface and application components.
+
+Redux Toolkit is used for application state management.
+
+React Router handles navigation between different application views.
+
+Axios is used to communicate with the backend REST APIs.
+
+Socket.IO Client handles real-time communication with the backend.
 Backend
-- Node.js
-- Express.js
-- REST APIs
-- Socket.IO
-- JWT
-- bcrypt
-- Mongoose
-Database & Storage
-- MongoDB Atlas
-- Cloudinary
-DevOps & Deployment
-- Docker
-- Docker Hub
-- GitHub Actions
-- AWS EC2
-- Nginx
-Architecture
-The application is deployed across two AWS EC2 instances.
-Component	Technology	Port
-Frontend EC2	React + Nginx + Docker	80
-Backend EC2	Node.js + Express + Socket.IO + Docker	5000 → 3300
-Database	MongoDB Atlas	Managed
-Image Storage	Cloudinary	Managed
+The backend is developed using Node.js and Express.js.
 
+It provides REST APIs for:
+- User authentication
+- User management
+- Chat creation
+- Chat retrieval
+- Message creation
+- Message retrieval
+- Profile picture uploads
+- Unread message management
+The backend is organized using controllers, models, middleware, and configuration files.
 
-Production Request Flow
-1. The browser loads the React application from the Frontend EC2 instance.
-2. Nginx serves the React production build.
-3. Nginx forwards /api/* requests to the Backend EC2 instance.
-4. Nginx forwards /socket.io/* requests for real-time communication.
-5. The backend communicates with MongoDB Atlas and Cloudinary.
-CI/CD
-GitHub Actions is used to validate the application and build Docker images.
+JWT authentication middleware protects routes that require an authenticated user.
 
-Workflow:
+Mongoose is used to communicate with MongoDB Atlas and manage application schemas.
+Real-Time Communication
+The application uses Socket.IO for communication between the frontend and backend.
 
-GitHub → GitHub Actions → CI Checks → Docker Build → Docker Hub → AWS EC2
-Client CI
-- Install dependencies with npm ci
-- Run ESLint
-- Build the React application
-Server CI
-- Install dependencies with npm ci
-- Validate the Node.js server with node --check
-Docker Images
-- dockerashok1225/mern-chat-client
-- dockerashok1225/mern-chat-server
-Docker images are automatically built and pushed after changes are pushed to the configured GitHub branches.
-Project Structure
-MERN-Chat-Application/
-├── client/
-│   ├── public/
-│   ├── src/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   ├── .dockerignore
-│   ├── package.json
-│   ├── package-lock.json
-│   └── vite.config.js
-│
-├── server/
-│   ├── config/
-│   │   └── dbConfig.js
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── chatController.js
-│   │   ├── messageController.js
-│   │   └── userController.js
-│   ├── middlewares/
-│   │   └── authMiddleware.js
-│   ├── models/
-│   │   ├── user.js
-│   │   ├── chat.js
-│   │   └── message.js
-│   ├── cloudinary.js
-│   ├── app.js
-│   ├── server.js
-│   ├── Dockerfile
-│   ├── .dockerignore
-│   ├── package.json
-│   └── package-lock.json
-│
-├── .github/
-│   └── workflows/
-│
-├── docker-compose.yml
-└── README.md
-Local Development
-Prerequisites
-- Node.js
-- npm
-- Git
-- MongoDB Atlas account or MongoDB
-- Cloudinary account
-- Docker (optional)
-Clone the Repository
-git clone https://github.com/Ashokgit25ai/MERN-Chat-Application.git
-cd MERN-Chat-Application
-Backend Setup
-cd server
-npm install
-Create server/.env:
-PORT_NUMBER=3300
-CONN_STR=your_mongodb_connection_string
-SECRET_KEY=your_jwt_secret
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-Start the backend:
-node server.js
-Backend:
-
-http://localhost:3300
-Frontend Setup
-Open another terminal:
-cd client
-npm install
-npm run dev
-Frontend:
-
-http://localhost:5173
-Docker
-The project contains separate Docker images for the frontend and backend.
-Backend
-cd server
-
-docker build -t mern-chat-server .
-
-docker run -d   --name mern-chat-server   --env-file .env   -p 5000:3300   mern-chat-server
-Frontend
-cd client
-
-docker build -t mern-chat-client .
-
-docker run -d   --name mern-chat-client   -p 3000:80   mern-chat-client
-Open:
-
-http://localhost:3000
-Docker Compose
-For local containerized development:
-docker-compose up --build
-Local ports:
-- Frontend: http://localhost:3000
-- Backend: http://localhost:5000
-MongoDB is not included as a Docker Compose service because the application uses MongoDB Atlas.
-AWS Deployment
-The production deployment uses two AWS EC2 instances.
-Frontend EC2
-Responsibilities:
-- Serves the React production build
-- Runs Nginx
-- Handles /api/* reverse proxy requests
-- Handles /socket.io/* WebSocket traffic
-- Runs the frontend Docker container
-Port mapping: EC2 :80 → Container :80
-Backend EC2
-Responsibilities:
-- Runs Node.js and Express
-- Runs Socket.IO
-- Connects to MongoDB Atlas
-- Connects to Cloudinary
-- Handles REST API requests
-Port mapping: EC2 :5000 → Container :3300
-Nginx Reverse Proxy
-Nginx runs on the frontend container and forwards backend traffic to the backend EC2 instance.
-location /api/ {
-    proxy_pass http://BACKEND_IP:5000;
-}
-
-location /socket.io/ {
-    proxy_pass http://BACKEND_IP:5000;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-}
-Environment Variables
-The backend uses environment variables for sensitive configuration.
-PORT_NUMBER
-CONN_STR
-SECRET_KEY
-CLOUDINARY_NAME
-CLOUDINARY_API_KEY
-CLOUDINARY_API_SECRET
-For production, the environment file is stored separately on the backend EC2 instance and passed to Docker with:
---env-file /home/ec2-user/mern-chat-server.env
-Secrets are not stored inside the Docker image.
-Never Commit
-- MongoDB credentials
-- JWT secrets
-- Cloudinary API secrets
-- Docker Hub passwords or access tokens
-- Other private credentials
-API Endpoints
-Authentication
-Method	Endpoint	Description
-POST	/api/auth/signup	Register a user
-POST	/api/auth/login	Login a user
-
-
-Users
-Method	Endpoint	Description
-GET	/api/user/get-logged-user	Get logged-in user
-GET	/api/user/get-all-users	Get users
-POST	/api/user/upload-profile-picture	Upload profile picture
-
-
-Chats
-Method	Endpoint	Description
-POST	/api/chat/create-new-chat	Create a chat
-GET	/api/chat/get-all-chats	Get user chats
-POST	/api/chat/clear-unread-message	Clear unread messages
-
-
-Messages
-Method	Endpoint	Description
-POST	/api/message/new-message	Create a message
-GET	/api/message/get-all-messages/:chatId	Get chat messages
-GET	/api/message/get-all-messages/:chatId?page=1&limit=30	Get paginated messages
-
-
-Socket.IO Events
-Presence
-- join-room
-- user-login
-- online-user
-- user-offline
-- disconnect
-Messaging
-- send-message
-- receive-message
-- set-message-count
-Typing
-- user-typing
-- started-typing
-Read / Unread Messages
-- clear-unread-messages
-- messages-count-cleared
+The Socket.IO implementation handles events related to:
+- Joining user rooms
+- User login
+- Online users
+- User disconnects
+- Sending messages
+- Receiving messages
+- Typing indicators
+- Unread message counts
+- Clearing unread messages
+User-specific Socket.IO rooms allow messages and status updates to be delivered to the appropriate users.
 Database
-MongoDB Atlas is used as the primary database through Mongoose.
+MongoDB Atlas is used as the application's primary database.
+
+The application contains three main data models.
 User
+Stores information such as:
 - Name
 - Email
 - Password hash
 - Profile picture
 - Last seen
 Chat
+Stores:
 - Chat members
 - Last message
 - Unread message count
 Message
+Stores:
 - Sender
 - Chat ID
 - Message content
 - Message type
 - Read status
-- Created timestamp
+- Creation timestamp
+Mongoose is used for schema definition, database operations, references, population, filtering, and pagination.
+Image Storage
+Cloudinary is integrated for image storage.
+
+It is used for:
+- Profile pictures
+- Images shared through conversations
+The application uploads images to Cloudinary and stores the resulting URLs rather than storing the image files directly in MongoDB.
+API Architecture
+The application follows a REST API architecture for normal application operations.
+
+The main API areas are:
+- /api/auth — authentication
+- /api/user — user operations
+- /api/chat — chat operations
+- /api/message — message operations
+Socket.IO is used alongside these APIs for functionality that needs real-time updates.
+Docker
+The application is containerized using Docker.
+
+There are separate Docker images for the frontend and backend.
+Frontend Container
+The React application is built into a production bundle and served using Nginx.
+
+The frontend container exposes port 80.
+Backend Container
+The Node.js backend runs inside its own Docker container.
+
+The application listens on container port 3300, which is mapped to port 5000 on the AWS EC2 instance.
+
+Environment variables are supplied separately to the container so sensitive credentials are not stored inside the Docker image.
+Nginx
+Nginx is used in the frontend container to serve the React production application and act as a reverse proxy.
+
+It handles:
+- React application requests
+- /api/* requests to the backend
+- /socket.io/* requests for WebSocket communication
+This allows the browser to communicate with the backend through the frontend server.
+AWS Deployment
+The production application is deployed using two AWS EC2 instances.
+Frontend EC2
+The frontend EC2 instance runs:
+- React production build
+- Nginx
+- Frontend Docker container
+The application is accessed through port 80.
+Backend EC2
+The backend EC2 instance runs:
+- Node.js
+- Express.js
+- Socket.IO
+- Backend Docker container
+The backend container listens on port 3300 and the EC2 instance exposes it through port 5000.
+
+The backend connects to:
+- MongoDB Atlas
+- Cloudinary
+CI/CD
+GitHub Actions is used to automate the application's CI/CD workflow.
+
+When code is pushed to the configured GitHub branches, the workflow performs validation for both the frontend and backend.
+
+For the frontend, the pipeline:
+1. Installs dependencies
+2. Runs ESLint
+3. Builds the React application
+For the backend, the pipeline:
+1. Installs dependencies
+2. Validates the Node.js server
+After the CI checks pass, Docker images are built and pushed to Docker Hub.
+
+The project uses two Docker Hub repositories:
+- dockerashok1225/mern-chat-client
+- dockerashok1225/mern-chat-server
+The latest images can then be pulled onto the respective AWS EC2 instances for deployment.
+Deployment Architecture
+The production setup consists of:
+
+Browser → Frontend EC2 → Nginx → Backend EC2 → MongoDB Atlas / Cloudinary
+
+The frontend and backend are separated into different Docker containers and EC2 instances.
+
+This separation makes the frontend and backend independently deployable.
 Security
-- JWT authentication
+The project implements several basic security practices:
+- JWT-based authentication
 - bcrypt password hashing
 - Protected API routes
 - Authentication middleware
 - Authorization headers
 - Environment variables for secrets
 - CORS configuration
-- .dockerignore files to exclude .env
-For production, backend network access should be restricted to trusted sources where possible.
+- .dockerignore files to prevent .env files from entering Docker images
+Sensitive values such as MongoDB credentials, JWT secrets, Cloudinary credentials, and Docker Hub credentials are kept outside the source code.
+My Work and Learning
+Through this project, I worked on both frontend and backend development and gained practical experience building and deploying a complete full-stack application.
+
+The project helped me develop practical skills in:
+- React.js
+- Node.js
+- Express.js
+- REST API development
+- MongoDB and Mongoose
+- JWT authentication
+- Socket.IO
+- Redux Toolkit
+- Cloudinary
+- Docker
+- Docker Hub
+- GitHub Actions
+- AWS EC2
+- Nginx
+- CI/CD
+- Production debugging
+- Environment and secret management
+The project also gave me practical experience troubleshooting real deployment issues, including Docker containers, Nginx reverse proxy configuration, CORS, environment variables, Cloudinary configuration, and communication between frontend and backend services.
+Current Deployment
+The application is currently deployed using:
+- React + Nginx on AWS EC2
+- Node.js + Express + Socket.IO on AWS EC2
+- MongoDB Atlas for database storage
+- Cloudinary for image storage
+- Docker for containerization
+- Docker Hub for image publishing
+- GitHub Actions for CI/CD
+
+
 Author
 Ganesh Venkata Ashok
 - GitHub: https://github.com/Ashokgit25ai
