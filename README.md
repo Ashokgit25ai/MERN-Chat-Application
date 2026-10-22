@@ -352,4 +352,8 @@ Ganesh Venkata Ashok
 
 License
 
+<<<<<<< Updated upstream
 This project was developed for learning, practice, and portfolio purposes.
+=======
+This project was developed for learning, practice, and portfolio purposes.
+>>>>>>> Stashed changes
