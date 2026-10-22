@@ -5,10 +5,9 @@ const authRouter = require("./controllers/authController");
 const userRouter = require("./controllers/userController");
 const chatRouter = require("./controllers/chatController");
 const messageRouter = require("./controllers/messageController");
-const aiRouter = require("./controllers/aiController");
 const User = require('./models/user');
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+const allowedOrigins = ['http://65.0.7.77','http://localhost:3000', 'http://localhost:5173'];
 
 app.use(cors({
   origin: allowedOrigins
@@ -31,7 +30,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/chat/", chatRouter);
 app.use("/api/message", messageRouter);
-app.use("/api/ai/", aiRouter);
 
 const onlineUsers = [];
 
