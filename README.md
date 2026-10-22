@@ -1,17 +1,27 @@
 MERN Chat Application
 
 MERN Chat Application is a full-stack real-time messaging application developed using the MERN stack: MongoDB, Express.js, React.js, and Node.js. The main purpose of the project is to provide users with a simple platform where they can register, log in, find other users, start private conversations, and exchange messages in real time.
+
 Project Overview
+
 The application provides user authentication, private one-to-one conversations, real-time messaging, online/offline presence, typing indicators, unread message counts, image sharing, profile picture management, user search, and message pagination.
+
 
 The frontend is built with React.js and provides the user interface for authentication, user search, chat management, messaging, profile management, and real-time updates.
 
+
 The backend is built with Node.js and Express.js. It provides REST APIs for authentication, users, chats, and messages. Socket.IO is used alongside the REST APIs to handle real-time communication between users.
 
-MongoDB Atlas is used as the database for storing user, chat, and message information. Cloudinary is used for storing profile pictures and images shared through conversations.
+
+MongoDB Atlas is used as the database for storing user, chat, and message information. Cloudinary 
+is used for storing profile pictures and images shared through conversations.
+
+
 Main Features
+
 User Authentication
 Users can create an account and log in securely.
+
 
 The application uses:
 - JWT for authentication
@@ -19,8 +29,11 @@ The application uses:
 - Protected API routes
 - Authentication middleware
 - Persistent login using JWT
+
+
 One-to-One Messaging
 Users can search for registered users and start private conversations.
+
 
 Each conversation maintains:
 - Chat members
@@ -28,10 +41,13 @@ Each conversation maintains:
 - Latest message
 - Message timestamp
 - Unread message count
+
 Real-Time Messaging
 Socket.IO provides real-time communication between users.
 
+
 When a user sends a message, the other user can receive it immediately without refreshing the page.
+
 
 Real-time functionality is also used for:
 - New message notifications
@@ -39,35 +55,48 @@ Real-time functionality is also used for:
 - Online/offline status
 - Unread message updates
 - Clearing unread message counts
+
 Online and Offline Status
 The application tracks whether users are currently online.
 
+
 When a user disconnects, the application updates their last-seen information.
+
 
 This allows users to see:
 - Online status
 - Offline status
 - Last seen information
+
 Typing Indicator
 When a user is typing inside a conversation, the other participant receives a real-time typing notification through Socket.IO.
+
 Unread Messages
 The application keeps track of unread messages for conversations.
+
 
 Unread counts are updated in real time and are cleared when the conversation is opened.
 Profile Pictures and Image Sharing
 Users can upload profile pictures.
 
+
 Images can also be shared inside conversations.
 
+
 Cloudinary is integrated as the external image storage service, while the resulting image URLs are stored with the relevant application data.
+
 User Search
 Users can search for registered users and start a conversation directly from the user list.
+
 Message Pagination
 Messages are loaded in pages instead of retrieving the complete conversation history at once.
 
+
 This helps reduce the amount of data loaded when a conversation contains a large number of messages.
+
 Frontend
 The frontend is developed using React.js with Vite.
+
 
 The main technologies used are:
 - React.js
@@ -80,15 +109,20 @@ The main technologies used are:
 - CSS3
 React is responsible for the user interface and application components.
 
+
 Redux Toolkit is used for application state management.
+
 
 React Router handles navigation between different application views.
 
+
 Axios is used to communicate with the backend REST APIs.
+
 
 Socket.IO Client handles real-time communication with the backend.
 Backend
 The backend is developed using Node.js and Express.js.
+
 
 It provides REST APIs for:
 - User authentication
@@ -99,13 +133,18 @@ It provides REST APIs for:
 - Message retrieval
 - Profile picture uploads
 - Unread message management
+
 The backend is organized using controllers, models, middleware, and configuration files.
+
 
 JWT authentication middleware protects routes that require an authenticated user.
 
+
 Mongoose is used to communicate with MongoDB Atlas and manage application schemas.
+
 Real-Time Communication
 The application uses Socket.IO for communication between the frontend and backend.
+
 
 The Socket.IO implementation handles events related to:
 - Joining user rooms
@@ -118,8 +157,10 @@ The Socket.IO implementation handles events related to:
 - Unread message counts
 - Clearing unread messages
 User-specific Socket.IO rooms allow messages and status updates to be delivered to the appropriate users.
+
 Database
 MongoDB Atlas is used as the application's primary database.
+
 
 The application contains three main data models.
 User
