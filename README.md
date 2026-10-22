@@ -156,6 +156,8 @@ The Socket.IO implementation handles events related to:
 - Typing indicators
 - Unread message counts
 - Clearing unread messages
+
+
 User-specific Socket.IO rooms allow messages and status updates to be delivered to the appropriate users.
 
 Database
@@ -183,14 +185,20 @@ Stores:
 - Message type
 - Read status
 - Creation timestamp
+
+
 Mongoose is used for schema definition, database operations, references, population, filtering, and pagination.
+
 Image Storage
 Cloudinary is integrated for image storage.
 
 It is used for:
 - Profile pictures
 - Images shared through conversations
+
 The application uploads images to Cloudinary and stores the resulting URLs rather than storing the image files directly in MongoDB.
+
+
 API Architecture
 The application follows a REST API architecture for normal application operations.
 
@@ -199,6 +207,8 @@ The main API areas are:
 - /api/user — user operations
 - /api/chat — chat operations
 - /api/message — message operations
+
+
 Socket.IO is used alongside these APIs for functionality that needs real-time updates.
 Docker
 The application is containerized using Docker.
@@ -221,30 +231,40 @@ It handles:
 - React application requests
 - /api/* requests to the backend
 - /socket.io/* requests for WebSocket communication
+
+
 This allows the browser to communicate with the backend through the frontend server.
+
 AWS Deployment
 The production application is deployed using two AWS EC2 instances.
+
 Frontend EC2
 The frontend EC2 instance runs:
 - React production build
 - Nginx
 - Frontend Docker container
+
 The application is accessed through port 80.
+
 Backend EC2
 The backend EC2 instance runs:
 - Node.js
 - Express.js
 - Socket.IO
 - Backend Docker container
+
 The backend container listens on port 3300 and the EC2 instance exposes it through port 5000.
 
 The backend connects to:
 - MongoDB Atlas
 - Cloudinary
+
 CI/CD
 GitHub Actions is used to automate the application's CI/CD workflow.
 
+
 When code is pushed to the configured GitHub branches, the workflow performs validation for both the frontend and backend.
+
 
 For the frontend, the pipeline:
 1. Installs dependencies
@@ -253,20 +273,28 @@ For the frontend, the pipeline:
 For the backend, the pipeline:
 1. Installs dependencies
 2. Validates the Node.js server
+
 After the CI checks pass, Docker images are built and pushed to Docker Hub.
 
 The project uses two Docker Hub repositories:
 - dockerashok1225/mern-chat-client
 - dockerashok1225/mern-chat-server
+
+
 The latest images can then be pulled onto the respective AWS EC2 instances for deployment.
+
 Deployment Architecture
 The production setup consists of:
 
+
 Browser → Frontend EC2 → Nginx → Backend EC2 → MongoDB Atlas / Cloudinary
+
 
 The frontend and backend are separated into different Docker containers and EC2 instances.
 
+
 This separation makes the frontend and backend independently deployable.
+
 Security
 The project implements several basic security practices:
 - JWT-based authentication
@@ -277,9 +305,12 @@ The project implements several basic security practices:
 - Environment variables for secrets
 - CORS configuration
 - .dockerignore files to prevent .env files from entering Docker images
+
 Sensitive values such as MongoDB credentials, JWT secrets, Cloudinary credentials, and Docker Hub credentials are kept outside the source code.
+
 My Work and Learning
 Through this project, I worked on both frontend and backend development and gained practical experience building and deploying a complete full-stack application.
+
 
 The project helped me develop practical skills in:
 - React.js
@@ -299,7 +330,9 @@ The project helped me develop practical skills in:
 - CI/CD
 - Production debugging
 - Environment and secret management
+
 The project also gave me practical experience troubleshooting real deployment issues, including Docker containers, Nginx reverse proxy configuration, CORS, environment variables, Cloudinary configuration, and communication between frontend and backend services.
+
 Current Deployment
 The application is currently deployed using:
 - React + Nginx on AWS EC2
@@ -312,7 +345,11 @@ The application is currently deployed using:
 
 
 Author
+
 Ganesh Venkata Ashok
+
 - GitHub: https://github.com/Ashokgit25ai
+
 License
+
 This project was developed for learning, practice, and portfolio purposes.
