@@ -7,7 +7,7 @@ const chatRouter = require("./controllers/chatController");
 const messageRouter = require("./controllers/messageController");
 const User = require('./models/user');
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+const allowedOrigins = ['http://65.0.7.77','http://localhost:3000', 'http://localhost:5173'];
 
 app.use(cors({
   origin: allowedOrigins
